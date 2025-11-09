@@ -31,11 +31,14 @@ var state = STATE_IDLE
 
 # Move the player to the corresponding spawnpoint, if any and connect to the dialog system
 func _ready():
-	var spawnpoints = get_tree().get_nodes_in_group("spawnpoints")
-	for spawnpoint in spawnpoints:
-		if spawnpoint.name == Globals.spawnpoint:
-			global_position = spawnpoint.global_position
-			break
+	if Globals.player_position != Vector2():
+		global_position = Globals.player_position
+	else:
+		var spawnpoints = get_tree().get_nodes_in_group("spawnpoints")
+		for spawnpoint in spawnpoints:
+			if spawnpoint.name == Globals.spawnpoint:
+				global_position = spawnpoint.global_position
+				break
 	if not (
 			Dialogs.dialog_started.connect(_on_dialog_started) == OK and
 			Dialogs.dialog_ended.connect(_on_dialog_ended) == OK):
@@ -51,6 +54,9 @@ func _input(event):
 
 
 func _physics_process(_delta):
+	# Update player position in Globals for saving
+	Globals.player_position = global_position
+
 	## PROCESS STATES
 	match state:
 		STATE_BLOCKED:

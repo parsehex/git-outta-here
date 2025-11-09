@@ -21,7 +21,7 @@ polygon = PackedVector2Array(-91, -73, 26, -139, 128, -139, 310, -69, 313, 50, 1
 
 [node name="puddle_small" type="Sprite2D" parent="."]
 z_index = -2
-position = Vector2(1508, 744)
+position = Vector2(2874, 1133)
 scale = Vector2(0.995735, 0.995735)
 texture = ExtResource("11")
 

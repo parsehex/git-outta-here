@@ -4,6 +4,7 @@ extends Node
 var spawnpoint = ""
 var current_level = ""
 var money = 0
+var player_position = Vector2()
 
 func _ready():
 	RenderingServer.set_default_clear_color(Color.WHITE)
@@ -17,6 +18,7 @@ func save_game():
 	save_dict.spawnpoint = spawnpoint
 	save_dict.current_level = current_level
 	save_dict.money = money
+	save_dict.player_position = {'x': player_position.x, 'y': player_position.y}
 	save_dict.inventory = Inventory.list()
 	save_dict.quests = Quest.get_quest_list()
 	# Save repository progress if available
@@ -65,6 +67,9 @@ func _restore_data(save_dict):
 	spawnpoint = save_dict.spawnpoint
 	current_level = save_dict.current_level
 	money = int(save_dict.money)
+	if save_dict.has("player_position"):
+		print(save_dict.player_position)
+		player_position = Vector2(save_dict.player_position.x, save_dict.player_position.y)
 
 	# Restore repository progress if available
 	if save_dict.has("repository_progress"):

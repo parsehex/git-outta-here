@@ -42,7 +42,7 @@ func load_data():
 
 func generate_repositories():
 	var start_x = -500
-	var spacing = 250
+	var spacing = 350
 
 	for i in range(min(repos_data.size(), 10)): # Limit for testing
 		var repo = repos_data[i]
@@ -51,7 +51,6 @@ func generate_repositories():
 		repo_node.repo_name = repo.get("name", "Unknown")
 		repo_node.repo_data = repo
 		repo_node.position = Vector2(start_x + i * spacing, 500)
-		print('drew ' + repo_node.repo_name)
 
 		repositories_container.add_child(repo_node)
 
