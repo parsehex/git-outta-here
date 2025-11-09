@@ -43,18 +43,7 @@ texture = ExtResource("11")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="puddle_small2/CollisionArea"]
 polygon = PackedVector2Array(-161.6896, 7.0300293, -28.119934, -72.30835, 50.214157, -72.30835, 189.80952, -28.119873, 191.81808, 28.119995, 140.59964, 82.3512, -168.71957, 90.3855, -195.83524, 60.25708)
 
-[node name="puddle_big2" type="Sprite2D" parent="."]
-z_index = -2
-position = Vector2(2965, 1246)
-scale = Vector2(1.97507, 1.97507)
-texture = ExtResource("10")
-
-[node name="CollisionArea" type="StaticBody2D" parent="puddle_big2"]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="puddle_big2/CollisionArea"]
-polygon = PackedVector2Array(-11.645142, -127.59039, 91.642334, -148.85547, 259.73767, -109.36322, 319.4823, -53.668945, 323.0265, 47.59326, 203.03076, 143.28607, -76.95935, 160.50067, -251.63672, 151.89337, -341.76, 86.57922, -344.29163, 50.631165, -267.83862, -11.138855, -90.62976, -71.89618)
-
 [node name="Character" parent="." instance=ExtResource("8")]
-position = Vector2(2319, 3239)
+position = Vector2(1210, 1153)
 
 [node name="UI" parent="." instance=ExtResource("2")]

@@ -19,6 +19,10 @@ func save_game():
 	save_dict.money = money
 	save_dict.inventory = Inventory.list()
 	save_dict.quests = Quest.get_quest_list()
+	# Save repository progress if available
+	var current_scene = get_tree().current_scene
+	if current_scene and current_scene.has_method("get_repository_progress"):
+		save_dict.repository_progress = current_scene.get_repository_progress()
 	savefile.store_line(JSON.stringify(save_dict))
 	savefile.close()
 	pass
@@ -61,4 +65,11 @@ func _restore_data(save_dict):
 	spawnpoint = save_dict.spawnpoint
 	current_level = save_dict.current_level
 	money = int(save_dict.money)
+
+	# Restore repository progress if available
+	if save_dict.has("repository_progress"):
+		var current_scene = get_tree().current_scene
+		if current_scene and current_scene.has_method("set_repository_progress"):
+			current_scene.set_repository_progress(save_dict.repository_progress)
+
 	pass
