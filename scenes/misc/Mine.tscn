@@ -36,11 +36,13 @@ text = "LanguageName"
 horizontal_alignment = 1
 
 [node name="CountLabel" type="Label" parent="."]
-offset_left = -60.5
-offset_top = 49.5
-offset_right = 60.5
-offset_bottom = 72.5
+offset_left = -60.0
+offset_top = 55.0
+offset_right = 61.0
+offset_bottom = 78.0
 theme_override_colors/font_color = Color(0.049776644, 0.049776644, 0.049776636, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.2901961)
+theme_override_font_sizes/font_size = 24
 text = "0 bytes"
 horizontal_alignment = 1
 

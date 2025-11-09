@@ -56,7 +56,7 @@ func generate_repositories():
 
 func generate_mines():
 	var start_x = -500
-	var spacing = 250
+	var spacing = 275
 
 	var lang_index = 0
 	for lang in all_languages:
