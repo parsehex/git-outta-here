@@ -1,0 +1,75 @@
+[gd_scene load_steps=9 format=3 uid="uid://q02nnkk1ptt3"]
+
+[ext_resource type="Texture2D" uid="uid://b5n6n5no4ic30" path="res://textures/props/tree.png" id="1"]
+[ext_resource type="Script" uid="uid://dmos6mvnpcrcv" path="res://scenes/props/Tree.gd" id="2"]
+
+[sub_resource type="CapsuleShape2D" id="1"]
+radius = 56.000008
+height = 112.000015
+
+[sub_resource type="Gradient" id="Gradient_12345"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 0, 0, 1, 1, 0, 0.5, 1, 1, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_67890"]
+gradient = SubResource("Gradient_12345")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qt0gd"]
+height = 276.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5x4hs"]
+radius = 139.03236
+
+[sub_resource type="CircleShape2D" id="2"]
+radius = 126.035706
+
+[node name="Tree" type="StaticBody2D"]
+script = ExtResource("2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1")
+offset = Vector2(-8.16085, -224.5715)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(6, 117)
+rotation = 1.5708
+shape = SubResource("1")
+
+[node name="ChopProgressBar" type="ProgressBar" parent="."]
+visible = false
+offset_left = -168.0
+offset_top = -111.0
+offset_right = 177.0
+offset_bottom = -73.0
+
+[node name="RangeIndicator" type="TextureRect" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.5882353)
+z_index = -2
+offset_left = -146.0
+offset_top = -33.0
+offset_right = 154.0
+offset_bottom = 267.0
+texture = SubResource("GradientTexture2D_67890")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ShadowArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ShadowArea"]
+position = Vector2(6, -45)
+shape = SubResource("CapsuleShape2D_qt0gd")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="ShadowArea"]
+position = Vector2(10, -251)
+shape = SubResource("CircleShape2D_5x4hs")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(9, 108)
+shape = SubResource("2")

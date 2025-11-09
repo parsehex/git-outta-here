@@ -1,0 +1,60 @@
+[gd_scene load_steps=6 format=3 uid="uid://damx5ema0gns7"]
+
+[ext_resource type="PackedScene" uid="uid://deqgnj30xx13t" path="res://scenes/misc/UI.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://ctd3mgp0s172q" path="res://scenes/characters/Player.tscn" id="8"]
+[ext_resource type="Texture2D" uid="uid://bwgyo0qknm6gt" path="res://textures/props/puddle_big.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cgd2njb3hg82" path="res://textures/props/puddle_small.png" id="11"]
+[ext_resource type="Script" uid="uid://5mxd6smbwcxw" path="res://scenes/levels/Outside.gd" id="14_12345"]
+
+[node name="Outside" type="Node"]
+script = ExtResource("14_12345")
+
+[node name="puddle_big" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(2963, 3143)
+texture = ExtResource("10")
+
+[node name="CollisionArea" type="StaticBody2D" parent="puddle_big"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="puddle_big/CollisionArea"]
+polygon = PackedVector2Array(-91, -73, 26, -139, 128, -139, 310, -69, 313, 50, 187, 141, -244, 154, -342, 77, -306, 13)
+
+[node name="puddle_small" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(1508, 744)
+scale = Vector2(0.995735, 0.995735)
+texture = ExtResource("11")
+
+[node name="CollisionArea" type="StaticBody2D" parent="puddle_small"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="puddle_small/CollisionArea"]
+position = Vector2(-1514.4591, -747.1867)
+scale = Vector2(1.0042832, 1.0042832)
+polygon = PackedVector2Array(1398, 724, 1457, 675, 1563, 672, 1687, 714, 1695, 776, 1617, 833, 1337, 830, 1315, 813, 1345, 750)
+
+[node name="puddle_small2" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(-134, 1903)
+scale = Vector2(0.995735, 0.995735)
+texture = ExtResource("11")
+
+[node name="CollisionArea" type="StaticBody2D" parent="puddle_small2"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="puddle_small2/CollisionArea"]
+polygon = PackedVector2Array(-161.6896, 7.0300293, -28.119934, -72.30835, 50.214157, -72.30835, 189.80952, -28.119873, 191.81808, 28.119995, 140.59964, 82.3512, -168.71957, 90.3855, -195.83524, 60.25708)
+
+[node name="puddle_big2" type="Sprite2D" parent="."]
+z_index = -2
+position = Vector2(2965, 1246)
+scale = Vector2(1.97507, 1.97507)
+texture = ExtResource("10")
+
+[node name="CollisionArea" type="StaticBody2D" parent="puddle_big2"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="puddle_big2/CollisionArea"]
+polygon = PackedVector2Array(-11.645142, -127.59039, 91.642334, -148.85547, 259.73767, -109.36322, 319.4823, -53.668945, 323.0265, 47.59326, 203.03076, 143.28607, -76.95935, 160.50067, -251.63672, 151.89337, -341.76, 86.57922, -344.29163, 50.631165, -267.83862, -11.138855, -90.62976, -71.89618)
+
+[node name="Character" parent="." instance=ExtResource("8")]
+position = Vector2(2319, 3239)
+
+[node name="UI" parent="." instance=ExtResource("2")]

@@ -1,0 +1,140 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsvs0cjac8jor"]
+
+[ext_resource type="Script" uid="uid://l16y6o8l2xym" path="res://scenes/levels/Menu.gd" id="4"]
+[ext_resource type="FontFile" uid="uid://bq0nyj1m4id7o" path="res://fonts/Candy Demo.otf" id="5"]
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_neighbor_left = NodePath("quit")
+focus_neighbor_top = NodePath("continue")
+focus_neighbor_right = NodePath("credits")
+focus_neighbor_bottom = NodePath("new_game")
+focus_mode = 2
+script = ExtResource("4")
+initial_level = "res://scenes/levels/Outside.tscn"
+
+[node name="logo" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -303.0
+offset_top = -318.0
+offset_right = 297.0
+offset_bottom = -118.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.1148968, 0.11489681, 0.1148968, 1)
+theme_override_fonts/font = ExtResource("5")
+theme_override_font_sizes/font_size = 86
+text = "Git Outta Here"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="new_game" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -58.0
+offset_right = 50.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+focus_neighbor_left = NodePath("../quit")
+focus_neighbor_top = NodePath("../quit")
+focus_neighbor_right = NodePath("../controls")
+focus_neighbor_bottom = NodePath("../continue")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.364706, 0.364706, 0.364706, 1)
+theme_override_fonts/font = ExtResource("5")
+theme_override_font_sizes/font_size = 24
+text = "New Game"
+flat = true
+
+[node name="continue" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = 83.0
+offset_right = 48.0
+offset_bottom = 153.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+focus_neighbor_left = NodePath("../quit")
+focus_neighbor_top = NodePath("../new_game")
+focus_neighbor_right = NodePath("../controls")
+focus_neighbor_bottom = NodePath("../controls")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0.364706, 0.364706, 0.364706, 1)
+theme_override_colors/font_disabled_color = Color(0.780392, 0.780392, 0.780392, 1)
+theme_override_fonts/font = ExtResource("5")
+theme_override_font_sizes/font_size = 24
+disabled = true
+text = "Continue"
+flat = true
+
+[node name="controls" type="Button" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -255.0
+offset_top = 169.0
+offset_right = -135.0
+offset_bottom = 239.0
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../quit")
+focus_neighbor_top = NodePath("../continue")
+focus_neighbor_right = NodePath("../quit")
+focus_neighbor_bottom = NodePath("../new_game")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5")
+text = "Controls"
+flat = true
+
+[node name="quit" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = -149.0
+offset_right = 125.0
+offset_bottom = -79.0
+grow_vertical = 0
+scale = Vector2(2, 2)
+focus_neighbor_left = NodePath("../controls")
+focus_neighbor_top = NodePath("../continue")
+focus_neighbor_right = NodePath("../controls")
+focus_neighbor_bottom = NodePath("../new_game")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("5")
+text = "Quit"
+flat = true
+
+[connection signal="pressed" from="new_game" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="controls" to="." method="_on_controls_pressed"]
+[connection signal="pressed" from="quit" to="." method="_on_quit_pressed"]

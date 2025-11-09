@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://deqgnj30xx13t"]
+
+[ext_resource type="PackedScene" path="res://scenes/misc/Dialog_box.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/misc/Stats.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/misc/StatusText.tscn" id="3"]
+[ext_resource type="Script" uid="uid://cp8xwke2k4q65" path="res://scenes/misc/UI.gd" id="13"]
+
+[node name="UI" type="CanvasLayer"]
+script = ExtResource("13")
+
+[node name="Dialog_box" parent="." instance=ExtResource("1")]
+anchors_preset = 12
+expand_mode = 1
+
+[node name="Stats" parent="." instance=ExtResource("2")]
+anchors_preset = 15
+
+[node name="Status_text" parent="." instance=ExtResource("3")]
+visible = false
