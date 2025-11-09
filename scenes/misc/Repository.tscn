@@ -28,6 +28,14 @@ offset_right = 90.0
 offset_bottom = 60.0
 color = Color(0.8, 0.2, 0.2, 0.3)
 
+[node name="LanguageList" type="VBoxContainer" parent="."]
+z_index = -1
+offset_left = -81.0
+offset_top = 56.0
+offset_right = 79.0
+offset_bottom = 106.0
+alignment = 1
+
 [node name="NameLabel" type="Label" parent="."]
 offset_left = -66.0
 offset_top = -42.0

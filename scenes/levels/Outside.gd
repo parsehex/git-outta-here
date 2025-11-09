@@ -42,7 +42,7 @@ func load_data():
 
 func generate_repositories():
 	var start_x = -500
-	var spacing = 350
+	var spacing = 550
 
 	for i in range(min(repos_data.size(), 10)): # Limit for testing
 		var repo = repos_data[i]
