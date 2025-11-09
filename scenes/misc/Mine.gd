@@ -26,6 +26,7 @@ func _ready():
 		range_indicator.visible = false
 	if label:
 		label.text = language_name
+	$Body.color = language_color
 	_update_count_label()
 	pass
 
