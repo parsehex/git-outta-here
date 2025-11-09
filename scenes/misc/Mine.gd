@@ -9,6 +9,7 @@ signal mine_interacted(mine_node: Node)
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var range_indicator = $RangeIndicator
 @onready var label: Label = $Label
+@onready var count_label: Label = $CountLabel
 
 var player_in_range = false
 var player_node = null
@@ -25,6 +26,7 @@ func _ready():
 		range_indicator.visible = false
 	if label:
 		label.text = language_name
+	_update_count_label()
 	pass
 
 func _process(delta):
@@ -48,10 +50,13 @@ func _process(delta):
 			progress_bar.value = 0.0
 			progress_bar.visible = false
 
+	_update_count_label()
+
 func _gather_completed():
 	var bytes_gathered = 100 # Arbitrary amount
 	Inventory.add_item(language_name, bytes_gathered)
 	print("Gathered " + str(bytes_gathered) + " bytes of " + language_name)
+	_update_count_label()
 
 func _on_body_entered(body):
 	if body is Player:
@@ -71,6 +76,11 @@ func _on_body_exited(body):
 		if range_indicator:
 			range_indicator.visible = false
 		print("Player exited mine area for language: " + language_name)
+
+func _update_count_label():
+	if count_label and language_name != "":
+		var current_count = Inventory.get_item(language_name)
+		count_label.text = str(current_count) + " bytes"
 
 func interact():
 	if language_name != "":
