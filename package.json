@@ -1,0 +1,21 @@
+{
+  "name": "git-outta-here",
+  "version": "1.0.0",
+  "description": "Play my GitHub profile.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parsehex/git-outta-here.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parsehex/git-outta-here/issues"
+  },
+  "homepage": "https://github.com/parsehex/git-outta-here#readme"
+}
