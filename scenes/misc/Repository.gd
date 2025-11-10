@@ -1,5 +1,7 @@
 extends Area2D
 
+# Repository, aka Project
+
 @export var repo_name: String = ""
 @export var repo_data: Dictionary = {}
 
@@ -15,7 +17,7 @@ var player_in_range = false
 var player_node = null
 var deposited = {}
 var deposit_progress = 0.0
-var deposit_duration = 1.5 # seconds to deposit
+var deposit_duration = 0.75 # seconds to deposit
 
 func _ready():
 	body_entered.connect(_on_body_entered)
