@@ -3,6 +3,8 @@ extends Area2D
 @export var language_name: String = ""
 @export var language_color: Color = Color.WHITE
 @export var gather_rate: float = 1.0 # bytes per second when holding interact
+@export var accumulation_rate_increase_per_gather: float = 0.03 # How much the rate increases per gather
+@export var accumulation_rate_chance: float = 0.33 # Chance for accumulation rate to increase (0.0 to 1.0)
 
 signal mine_interacted(mine_node: Node)
 
@@ -10,12 +12,14 @@ signal mine_interacted(mine_node: Node)
 @onready var range_indicator = $RangeIndicator
 @onready var label: Label = $Label
 @onready var count_label: Label = $CountLabel
-@onready var tooltip: Label = $Tooltip
+@onready var accumulation_rate_label: Label = $AccumulationRateLabel
 
 var player_in_range = false
 var player_node = null
 var gather_progress = 0.0
 var gather_duration = 2.75 # seconds to gather some bytes
+var current_accumulation_rate: float = 0.0
+var accumulated_bytes: float = 0.0
 
 func _ready():
 	body_entered.connect(_on_body_entered)
@@ -23,16 +27,31 @@ func _ready():
 
 	if progress_bar:
 		progress_bar.visible = false
-	if range_indicator:
-		range_indicator.visible = false
 	if label:
 		label.text = language_name
 	$Body.color = language_color
-	_update_count_label()
+
+	# Initialize accumulation rate from Globals or set to base
+	if Globals.mine_accumulation_rates.has(language_name):
+		current_accumulation_rate = Globals.mine_accumulation_rates[language_name]
+	else:
+		current_accumulation_rate = 0.0
+		Globals.mine_accumulation_rates[language_name] = current_accumulation_rate
+
+	_update_labels()
 	pass
 
 func _process(delta):
-	if player_in_range and player_node and Input.is_action_pressed("interact"):
+	# Passive accumulation
+	if current_accumulation_rate > 0:
+		accumulated_bytes += current_accumulation_rate * delta
+		if accumulated_bytes >= 1.0: # Add to inventory once a full byte is accumulated
+			var whole_bytes = floor(accumulated_bytes)
+			Inventory.add_item(language_name, whole_bytes, true)
+			accumulated_bytes -= whole_bytes
+			_update_labels()
+
+	if player_in_range and player_node:
 		gather_progress += (delta / gather_duration) * 100
 		gather_progress = clamp(gather_progress, 0, 100)
 
@@ -46,47 +65,43 @@ func _process(delta):
 			if progress_bar:
 				progress_bar.value = 0.0
 				progress_bar.visible = false
-	else:
-		gather_progress = 0.0
-		if progress_bar:
-			progress_bar.value = 0.0
-			progress_bar.visible = false
 
-	_update_count_label()
+	_update_labels()
 
 func _gather_completed():
 	var bytes_gathered = 100 # Arbitrary amount
 	Inventory.add_item(language_name, bytes_gathered)
 	print("Gathered " + str(bytes_gathered) + " bytes of " + language_name)
-	_update_count_label()
+
+	# Increase accumulation rate with a random chance
+	if randf() < accumulation_rate_chance:
+		current_accumulation_rate += accumulation_rate_increase_per_gather
+		Globals.mine_accumulation_rates[language_name] = current_accumulation_rate
+		print("Accumulation rate for " + language_name + " increased to: " + str(current_accumulation_rate))
+
+	_update_labels()
 
 func _on_body_entered(body):
 	if body is Player:
 		player_in_range = true
 		player_node = body
-		if range_indicator:
-			range_indicator.visible = true
-		if tooltip:
-			tooltip.visible = true
 		print("Player entered mine area for language: " + language_name)
 
 func _on_body_exited(body):
 	if body is Player:
 		player_in_range = false
 		player_node = null
-		gather_progress = 0.0
 		if progress_bar:
 			progress_bar.visible = false
-		if range_indicator:
-			range_indicator.visible = false
-		if tooltip:
-			tooltip.visible = false
 		print("Player exited mine area for language: " + language_name)
 
-func _update_count_label():
+func _update_labels():
 	if count_label and language_name != "":
 		var current_count = Inventory.get_item(language_name)
 		count_label.text = str(current_count) + " bytes"
+
+	if accumulation_rate_label and language_name != "" and current_accumulation_rate > 0:
+		accumulation_rate_label.text = "Rate: " + "%.2f" % current_accumulation_rate + " b/s"
 
 func interact():
 	if language_name != "":

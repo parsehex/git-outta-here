@@ -6,6 +6,7 @@ var current_level = ""
 var money = 0
 var player_position = Vector2()
 var lang_colors: Dictionary = {}
+var mine_accumulation_rates: Dictionary = {} # Stores accumulation rates for each language mine
 var pending_repository_data = null
 
 func _ready():
@@ -41,6 +42,7 @@ func save_game():
 	save_dict.player_position = {'x': player_position.x, 'y': player_position.y}
 	save_dict.inventory = Inventory.list()
 	save_dict.quests = Quest.get_quest_list()
+	save_dict.mine_accumulation_rates = mine_accumulation_rates # Save mine accumulation rates
 	# Save repository progress if available
 	var current_scene = get_tree().current_scene
 	if current_scene and current_scene.has_method("get_repository_progress"):
@@ -91,6 +93,9 @@ func _restore_data(save_dict):
 	money = int(save_dict.money)
 	if save_dict.has("player_position"):
 		player_position = Vector2(save_dict.player_position.x, save_dict.player_position.y)
+
+	if save_dict.has("mine_accumulation_rates"):
+		mine_accumulation_rates = save_dict.mine_accumulation_rates
 
 	# Restore repository progress if available
 	if save_dict.has("repository_progress"):

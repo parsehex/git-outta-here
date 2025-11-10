@@ -24,7 +24,9 @@ func _questlog_updated(quest_name, status):
 	_queue_message(txt)
 	pass
 
-func _inventory_updated(action, type, amount):
+func _inventory_updated(action, type, amount, skip_status):
+	if skip_status:
+		return
 	var txt
 	match action:
 		"added":
@@ -39,7 +41,7 @@ func _queue_message(p_text):
 	if not $anims.is_playing():
 		_play_next()
 	pass
-	
+
 func _play_next():
 	if messages.is_empty():
 		return
