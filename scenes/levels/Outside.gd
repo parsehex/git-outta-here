@@ -12,8 +12,8 @@ var repository_scene: PackedScene = preload("res://scenes/misc/Repository.tscn")
 var mine_scene: PackedScene = preload("res://scenes/misc/Mine.tscn")
 
 # Node containers
-@onready var repositories_container: Node2D = Node2D.new()
-@onready var mines_container: Node2D = Node2D.new()
+@onready var repositories_container: Node2D = $Spawnpoints/Projects
+@onready var mines_container: Node2D = $Spawnpoints/LangMines
 
 func load_data():
 	# Load repositories data
@@ -36,7 +36,7 @@ func load_data():
 	lang_colors = Globals.lang_colors
 
 func generate_repositories():
-	var start_x = -500
+	var start_x = 0
 	var spacing = 550
 
 	for i in range(min(repos_data.size(), 10)): # Limit for testing
@@ -45,12 +45,12 @@ func generate_repositories():
 
 		repo_node.repo_name = repo.get("name", "Unknown")
 		repo_node.repo_data = repo
-		repo_node.position = Vector2(start_x + i * spacing, 500)
+		repo_node.position = Vector2(start_x + i * spacing, 0)
 
 		repositories_container.add_child(repo_node)
 
 func generate_mines():
-	var start_x = 1000
+	var start_x = 0
 	var spacing = 275
 	var vertical_spacing = 400
 
@@ -68,7 +68,7 @@ func generate_mines():
 
 		var row = lang_index / 7
 		var col = lang_index % 7
-		mine_node.position = Vector2(start_x + col * spacing, 1500 + row * vertical_spacing)
+		mine_node.position = Vector2(start_x + col * spacing, 0 + row * vertical_spacing)
 
 		mines_container.add_child(mine_node)
 		lang_index += 1
@@ -76,12 +76,6 @@ func generate_mines():
 func _ready():
 	# Load data
 	load_data()
-
-	# Create containers
-	add_child(repositories_container)
-	repositories_container.name = "Repositories"
-	add_child(mines_container)
-	mines_container.name = "Mines"
 
 	# Generate repositories and mines
 	generate_repositories()

@@ -134,6 +134,16 @@ theme_override_fonts/font = ExtResource("5")
 text = "Quit"
 flat = true
 
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 364.0
+offset_top = 541.0
+offset_right = 894.0
+offset_bottom = 564.0
+theme_override_colors/font_color = Color(1, 0.57, 0.57, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.40784314)
+text = "Game is experimental and you may lose progress sometimes / often."
+
 [connection signal="pressed" from="new_game" to="." method="_on_new_game_pressed"]
 [connection signal="pressed" from="continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="controls" to="." method="_on_controls_pressed"]
