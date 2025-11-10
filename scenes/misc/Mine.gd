@@ -15,7 +15,7 @@ signal mine_interacted(mine_node: Node)
 var player_in_range = false
 var player_node = null
 var gather_progress = 0.0
-var gather_duration = 2.0 # seconds to gather some bytes
+var gather_duration = 1.5 # seconds to gather some bytes
 
 func _ready():
 	body_entered.connect(_on_body_entered)

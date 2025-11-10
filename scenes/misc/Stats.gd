@@ -3,7 +3,9 @@ extends PanelContainer
 var enabled = false
 
 func _ready():
-	Globals.save_game()
+	# not sure why this was here, causes problems with repo
+	#   state being overwritten
+	# Globals.save_game()
 	get_tree().set_auto_accept_quit(false)
 	hide()
 
@@ -16,29 +18,57 @@ func _input(event):
 			grab_focus()
 			_update_quest_listing()
 			_update_item_listing()
-			
+			_update_language_listing()
+
 func _update_quest_listing():
 	var text = ""
-	text += "Started:\n"
-	for quest in Quest.list(Quest.STATUS.STARTED):
-		text += "  %s\n" % quest
-	text += "Failed:\n"
-	for quest in Quest.list(Quest.STATUS.FAILED):
-		text += "  %s\n" % quest
-	
+	# text += "Started:\n"
+	# for quest in Quest.list(Quest.STATUS.STARTED):
+	# 	text += "  %s\n" % quest
+	# text += "Failed:\n"
+	# for quest in Quest.list(Quest.STATUS.FAILED):
+	# 	text += "  %s\n" % quest
+
 	$VBoxContainer/HBoxContainer/Quests/Details.text = text
 	pass
 
-func _update_item_listing():
+func _update_inventory_details(languages_text: String):
 	var text = ""
 	var inventory = Inventory.list()
-	if inventory.is_empty():
-		text += "[Empty]"
+	var non_languages = []
 	for item in inventory:
-		text += "%s x %s\n" % [item, inventory[item]]
+		if not _is_language(item):
+			non_languages.append(item)
+	if not non_languages.is_empty():
+		for item in non_languages:
+			text += "  %s x %s\n" % [item, inventory[item]]
+	text += "\n" + languages_text
 	$VBoxContainer/HBoxContainer/Inventory/Details.text = text
+
+func _update_item_listing():
+	var text = "Languages:\n"
+	var inventory = Inventory.list()
+	var languages = []
+	for item in inventory:
+		if _is_language(item):
+			languages.append(item)
+	if languages.is_empty():
+		text += "[None]"
+	else:
+		languages.sort()
+		for lang in languages:
+			text += "%s: %s bytes\n" % [lang, inventory[lang]]
+	_update_inventory_details(text)
 	pass
 
+func _update_language_listing():
+	pass # This function is no longer needed as languages are shown in inventory
+
+func _is_language(language_name: String) -> bool:
+	# Check if this is one of our tracked languages
+	# For now, assume all items that aren't standard inventory are languages
+	var standard_items = ["wood", "money"] # Add more as needed
+	return not standard_items.has(language_name)
 
 
 func _on_Exit_pressed():
@@ -48,7 +78,7 @@ func _on_Exit_pressed():
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit_game()
-		
+
 func quit_game():
 	Globals.save_game()
 	get_tree().quit()

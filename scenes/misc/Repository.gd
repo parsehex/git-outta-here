@@ -15,7 +15,7 @@ var player_in_range = false
 var player_node = null
 var deposited = {}
 var deposit_progress = 0.0
-var deposit_duration = 3.0 # seconds to deposit
+var deposit_duration = 1.5 # seconds to deposit
 
 func _ready():
 	body_entered.connect(_on_body_entered)
@@ -58,7 +58,7 @@ func _update_language_list():
 
 	# Sort languages by size (required bytes), descending
 	var sorted_languages = repo_data.languages.keys()
-	sorted_languages.sort_custom(func(a, b): return repo_data.languages[b] > repo_data.languages[a])
+	sorted_languages.sort_custom(func(a, b): return repo_data.languages[b] < repo_data.languages[a])
 
 	var labels = []
 	for lang in sorted_languages:
@@ -134,8 +134,8 @@ func _deposit_completed():
 		var available = Inventory.get_item(lang)
 		var to_deposit = min(required - deposited[lang], available)
 		if to_deposit > 0:
-			Inventory.remove_item(lang, to_deposit)
 			deposited[lang] += to_deposit
+			Inventory.remove_item(lang, to_deposit)
 			print("Deposited " + str(to_deposit) + " bytes of " + lang + " to " + repo_name)
 
 	# Update the language list after deposit
@@ -151,6 +151,9 @@ func _deposit_completed():
 	if completed:
 		repo_completed.emit(self)
 		print("Repository " + repo_name + " completed!")
+
+	if range_indicator:
+		range_indicator.visible = false
 
 func _on_body_entered(body):
 	if body is Player:
@@ -182,3 +185,13 @@ func interact():
 	if repo_name != "":
 		repo_interacted.emit(self)
 		print("Interacting with repository: " + repo_name)
+
+func get_save_data() -> Dictionary:
+	return {
+		"name": repo_name,
+		"deposited": deposited.duplicate()
+	}
+
+func load_save_data(data: Dictionary):
+	deposited = data.get("deposited", {})
+	_update_language_list()

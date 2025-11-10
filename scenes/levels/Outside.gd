@@ -87,6 +87,11 @@ func _ready():
 	generate_repositories()
 	generate_mines()
 
+	# Load repository save data if available
+	if Globals.pending_repository_data:
+		load_repository_save_data(Globals.pending_repository_data)
+		Globals.pending_repository_data = null
+
 	# Calculate total progress
 	_calculate_total_progress()
 
@@ -119,6 +124,25 @@ func get_repository_progress() -> Dictionary:
 			# In a full implementation, you'd want to track completion state
 			progress[repo_node.repo_name] = false # Placeholder
 	return progress
+
+func get_repository_save_data() -> Array:
+	var save_data = []
+	if not repositories_container:
+		return save_data
+	for repo_node in repositories_container.get_children():
+		if repo_node.has_method("get_save_data"):
+			save_data.append(repo_node.get_save_data())
+	return save_data
+
+func load_repository_save_data(data: Array):
+	if not repositories_container:
+		return
+	for repo_data in data:
+		var repo_name = repo_data.get("name", "")
+		for repo_node in repositories_container.get_children():
+			if repo_node.repo_name == repo_name and repo_node.has_method("load_save_data"):
+				repo_node.load_save_data(repo_data)
+				break
 
 func set_repository_progress(progress: Dictionary):
 	# Restore repository progress

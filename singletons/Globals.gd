@@ -6,6 +6,7 @@ var current_level = ""
 var money = 0
 var player_position = Vector2()
 var lang_colors: Dictionary = {}
+var pending_repository_data = null
 
 func _ready():
 	RenderingServer.set_default_clear_color(Color.WHITE)
@@ -44,6 +45,8 @@ func save_game():
 	var current_scene = get_tree().current_scene
 	if current_scene and current_scene.has_method("get_repository_progress"):
 		save_dict.repository_progress = current_scene.get_repository_progress()
+	if current_scene and current_scene.has_method("get_repository_save_data"):
+		save_dict.repositories = current_scene.get_repository_save_data()
 	savefile.store_line(JSON.stringify(save_dict))
 	savefile.close()
 	pass
@@ -87,7 +90,6 @@ func _restore_data(save_dict):
 	current_level = save_dict.current_level
 	money = int(save_dict.money)
 	if save_dict.has("player_position"):
-		print(save_dict.player_position)
 		player_position = Vector2(save_dict.player_position.x, save_dict.player_position.y)
 
 	# Restore repository progress if available
@@ -95,5 +97,8 @@ func _restore_data(save_dict):
 		var current_scene = get_tree().current_scene
 		if current_scene and current_scene.has_method("set_repository_progress"):
 			current_scene.set_repository_progress(save_dict.repository_progress)
+	if save_dict.has("repositories"):
+		# Store for later loading after scene change
+		pending_repository_data = save_dict.repositories
 
 	pass
