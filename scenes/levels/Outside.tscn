@@ -40,13 +40,13 @@ position = Vector2(-428, 405)
 position = Vector2(544, 1167)
 
 [node name="Upgrades" type="Node2D" parent="Spawnpoints"]
-position = Vector2(-946, 1105)
+position = Vector2(-941, 1224)
 
 [node name="UpgradesLabel" type="Label" parent="Spawnpoints/Upgrades"]
-offset_left = 14.0
-offset_top = -167.0
-offset_right = 364.0
-offset_bottom = 12.0
+offset_left = 95.0
+offset_top = -142.0
+offset_right = 445.0
+offset_bottom = 37.0
 theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
 text = "Upgrades

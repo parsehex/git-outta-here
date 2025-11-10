@@ -89,7 +89,7 @@ func _update_language_list():
 
 func _process(delta):
 	if player_in_range and player_node and Input.is_action_pressed("interact"):
-		# Check if player has required languages
+		# Check if player has any languages to deposit
 		if _has_required_languages():
 			deposit_progress += (delta / deposit_duration) * 100
 			deposit_progress = clamp(deposit_progress, 0, 100)
@@ -120,6 +120,8 @@ func _has_required_languages() -> bool:
 
 	for lang in repo_data.languages:
 		var required = repo_data.languages[lang]
+		if required == deposited[lang]:
+			continue
 		var available = Inventory.get_item(lang)
 		if available > 0:
 			return true
