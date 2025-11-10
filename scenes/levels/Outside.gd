@@ -50,8 +50,9 @@ func generate_repositories():
 		repositories_container.add_child(repo_node)
 
 func generate_mines():
-	var start_x = -500
+	var start_x = 1000
 	var spacing = 275
+	var vertical_spacing = 400
 
 	var lang_index = 0
 	for lang in all_languages:
@@ -65,7 +66,9 @@ func generate_mines():
 			var color = lang_colors[lang]
 			mine_node.language_color = Color(color)
 
-		mine_node.position = Vector2(start_x + lang_index * spacing, 1500)
+		var row = lang_index / 7
+		var col = lang_index % 7
+		mine_node.position = Vector2(start_x + col * spacing, 1500 + row * vertical_spacing)
 
 		mines_container.add_child(mine_node)
 		lang_index += 1

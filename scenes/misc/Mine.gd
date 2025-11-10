@@ -10,6 +10,7 @@ signal mine_interacted(mine_node: Node)
 @onready var range_indicator = $RangeIndicator
 @onready var label: Label = $Label
 @onready var count_label: Label = $CountLabel
+@onready var tooltip: Label = $Tooltip
 
 var player_in_range = false
 var player_node = null
@@ -65,6 +66,8 @@ func _on_body_entered(body):
 		player_node = body
 		if range_indicator:
 			range_indicator.visible = true
+		if tooltip:
+			tooltip.visible = true
 		print("Player entered mine area for language: " + language_name)
 
 func _on_body_exited(body):
@@ -76,6 +79,8 @@ func _on_body_exited(body):
 			progress_bar.visible = false
 		if range_indicator:
 			range_indicator.visible = false
+		if tooltip:
+			tooltip.visible = false
 		print("Player exited mine area for language: " + language_name)
 
 func _update_count_label():
