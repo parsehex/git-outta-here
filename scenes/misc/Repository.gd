@@ -4,6 +4,7 @@ extends Area2D
 @export var repo_data: Dictionary = {}
 
 signal repo_interacted(repo_node: Node)
+signal repo_completed(repo_node: Node)
 
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var range_indicator = $RangeIndicator
@@ -12,6 +13,7 @@ signal repo_interacted(repo_node: Node)
 
 var player_in_range = false
 var player_node = null
+var deposited = {}
 var deposit_progress = 0.0
 var deposit_duration = 3.0 # seconds to deposit
 
@@ -26,6 +28,11 @@ func _ready():
 		range_indicator.visible = false
 	if name_label:
 		name_label.text = repo_name
+
+	# Initialize deposited amounts
+	for lang in repo_data.languages:
+		deposited[lang] = 0
+
 	_update_language_list()
 	pass
 
@@ -56,7 +63,7 @@ func _update_language_list():
 	var labels = []
 	for lang in sorted_languages:
 		var required = repo_data.languages[lang]
-		var current = Inventory.get_item(lang)
+		var current = deposited.get(lang, 0)
 
 		# Create HBoxContainer for this language entry
 		var hbox = HBoxContainer.new()
@@ -113,10 +120,10 @@ func _has_required_languages() -> bool:
 
 	for lang in repo_data.languages:
 		var required = repo_data.languages[lang]
-		var current = Inventory.get_item(lang)
-		if current < required:
-			return false
-	return true
+		var available = Inventory.get_item(lang)
+		if available > 0:
+			return true
+	return false
 
 func _deposit_completed():
 	if not repo_data.has("languages"):
@@ -124,21 +131,40 @@ func _deposit_completed():
 
 	for lang in repo_data.languages:
 		var required = repo_data.languages[lang]
-		Inventory.remove_item(lang, required)
-		print("Deposited " + str(required) + " bytes of " + lang + " to " + repo_name)
+		var available = Inventory.get_item(lang)
+		var to_deposit = min(required - deposited[lang], available)
+		if to_deposit > 0:
+			Inventory.remove_item(lang, to_deposit)
+			deposited[lang] += to_deposit
+			print("Deposited " + str(to_deposit) + " bytes of " + lang + " to " + repo_name)
 
 	# Update the language list after deposit
 	_update_language_list()
 
-	# Mark this repository as completed (you might want to track this in a separate system)
-	print("Repository " + repo_name + " completed!")
+	# Check if repository is completed
+	var completed = true
+	for lang in repo_data.languages:
+		if deposited[lang] < repo_data.languages[lang]:
+			completed = false
+			break
+
+	if completed:
+		repo_completed.emit(self)
+		print("Repository " + repo_name + " completed!")
 
 func _on_body_entered(body):
 	if body is Player:
 		player_in_range = true
 		player_node = body
 		if range_indicator:
-			range_indicator.visible = true
+			# Check if repository is already completed
+			var completed = true
+			for lang in repo_data.languages:
+				if deposited[lang] < repo_data.languages[lang]:
+					completed = false
+					break
+			if not completed and _has_required_languages():
+				range_indicator.visible = true
 		print("Player entered repository area: " + repo_name)
 
 func _on_body_exited(body):
