@@ -11,7 +11,6 @@ signal repo_interacted(repo_node: Node)
 @onready var language_list: VBoxContainer = $LanguageList
 
 var player_in_range = false
-var language_colors = {}
 var player_node = null
 var deposit_progress = 0.0
 var deposit_duration = 3.0 # seconds to deposit
@@ -20,7 +19,6 @@ func _ready():
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	Inventory.item_changed.connect(_on_inventory_changed)
-	_load_language_colors()
 
 	if progress_bar:
 		progress_bar.visible = false
@@ -34,26 +32,10 @@ func _ready():
 func _on_inventory_changed(action, type, amount):
 	_update_language_list()
 
-func _load_language_colors():
-	var colors_file = "res://data/lang-colors.json"
-	if FileAccess.file_exists(colors_file):
-		var file = FileAccess.open(colors_file, FileAccess.READ)
-		var json_string = file.get_as_text()
-		file.close()
-
-		var json = JSON.new()
-		var error = json.parse(json_string)
-		if error == OK:
-			var colors_data = json.get_data()
-			for lang_name in colors_data:
-				if colors_data[lang_name].has("color"):
-					var color_hex = colors_data[lang_name]["color"]
-					if color_hex != null and color_hex is String and color_hex.begins_with("#"):
-						language_colors[lang_name] = Color(color_hex)
 
 func _get_language_color(lang_name: String) -> Color:
-	if language_colors.has(lang_name):
-		return language_colors[lang_name]
+	if Globals.lang_colors.has(lang_name):
+		return Globals.lang_colors[lang_name]
 	return Color(0, 0, 0, 1) # Black fallback
 
 func _update_language_list():

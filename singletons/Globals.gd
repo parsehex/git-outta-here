@@ -5,9 +5,28 @@ var spawnpoint = ""
 var current_level = ""
 var money = 0
 var player_position = Vector2()
+var lang_colors: Dictionary = {}
 
 func _ready():
 	RenderingServer.set_default_clear_color(Color.WHITE)
+	_load_language_colors()
+
+func _load_language_colors():
+	var colors_file = "res://data/lang-colors.json"
+	if FileAccess.file_exists(colors_file):
+		var file = FileAccess.open(colors_file, FileAccess.READ)
+		var json_string = file.get_as_text()
+		file.close()
+
+		var json = JSON.new()
+		var error = json.parse(json_string)
+		if error == OK:
+			var colors_data = json.get_data()
+			for lang_name in colors_data:
+				if colors_data[lang_name].has("color"):
+					var color_hex = colors_data[lang_name]["color"]
+					if color_hex != null and color_hex is String and color_hex.begins_with("#"):
+						lang_colors[lang_name] = Color(color_hex)
 
 """
 Really simple save file implementation. Just saving some variables to a dictionary

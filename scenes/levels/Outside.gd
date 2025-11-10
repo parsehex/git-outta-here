@@ -32,13 +32,8 @@ func load_data():
 						all_languages[lang] = 0
 					all_languages[lang] += repo.languages[lang]
 
-	# Load language colors
-	var colors_file = FileAccess.open("res://data/lang-colors.json", FileAccess.READ)
-	if colors_file:
-		var colors_json = JSON.new()
-		colors_json.parse(colors_file.get_as_text())
-		lang_colors = colors_json.get_data()
-		colors_file.close()
+	# Load language colors from globals
+	lang_colors = Globals.lang_colors
 
 func generate_repositories():
 	var start_x = -500
@@ -67,8 +62,8 @@ func generate_mines():
 
 		mine_node.language_name = lang
 		if lang_colors.has(lang):
-			var color_str = lang_colors[lang].get("color", "#FFFFFF")
-			mine_node.language_color = Color(color_str)
+			var color = lang_colors[lang]
+			mine_node.language_color = Color(color)
 
 		mine_node.position = Vector2(start_x + lang_index * spacing, 1500)
 

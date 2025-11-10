@@ -8,8 +8,8 @@ in the AssetLib if you want to make something more complex. Also it shares code 
 and probably both should extend some parent script
 """
 
-@export var WALK_SPEED: int = 350 # pixels per second
-@export var RUN_SPEED: int = 550 # pixels per second
+@export var WALK_SPEED: int = 400 # pixels per second
+@export var RUN_SPEED: int = 600 # pixels per second
 @export var ROLL_SPEED: int = 1000 # pixels per second
 @export var hitpoints: int = 3
 
