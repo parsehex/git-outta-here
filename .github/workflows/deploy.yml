@@ -1,5 +1,7 @@
 name: 'Deploy'
-on: push
+on:
+  push:
+    branches: [main]
 
 # from
 # https://gitlab.com/barichello/game-off/-/blob/master/.github/workflows/godot-ci.yml?ref_type=heads
