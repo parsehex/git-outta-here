@@ -1,0 +1,35 @@
+name: 'Deploy'
+on: push
+
+# from
+# https://gitlab.com/barichello/game-off/-/blob/master/.github/workflows/godot-ci.yml?ref_type=heads
+
+env:
+  GODOT_VERSION: 4.5.1
+  EXPORT_NAME: git-outta-here
+
+jobs:
+  export-web:
+    name: Web Export
+    runs-on: ubuntu-latest
+    container:
+      image: docker://barichello/godot-ci:4.5.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Setup
+        run: |
+          mkdir -v -p build/linux build/windows build/mac build/web ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Web Build
+        run: godot -v --export "HTML5" ./build/web/index.html
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: web
+      #     path: ./build/web/
