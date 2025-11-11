@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://damx5ema0gns7"]
+[gd_scene load_steps=6 format=3 uid="uid://damx5ema0gns7"]
 
 [ext_resource type="PackedScene" uid="uid://deqgnj30xx13t" path="res://scenes/misc/UI.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://5rexqec10qdw" path="res://scenes/misc/Profile.tscn" id="4_l62tg"]
 [ext_resource type="PackedScene" uid="uid://ctd3mgp0s172q" path="res://scenes/characters/Player.tscn" id="8"]
 [ext_resource type="Script" uid="uid://5mxd6smbwcxw" path="res://scenes/levels/Outside.gd" id="14_12345"]
 
@@ -17,10 +18,10 @@ position = Vector2(515, 819)
 [node name="UI" parent="." instance=ExtResource("2")]
 
 [node name="LangMinesLabel" type="Label" parent="."]
-offset_left = 599.0
-offset_top = 1080.0
-offset_right = 949.0
-offset_bottom = 1168.0
+offset_left = 610.0
+offset_top = 960.0
+offset_right = 960.0
+offset_bottom = 1048.0
 theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
 text = "Lang Mines"
@@ -52,7 +53,7 @@ position = Vector2(-428, 405)
 position = Vector2(-428, -191)
 
 [node name="LangMines" type="Node2D" parent="Spawnpoints"]
-position = Vector2(535, 1332)
+position = Vector2(557, 1168)
 
 [node name="Upgrades" type="Node2D" parent="Spawnpoints"]
 position = Vector2(-1033, 1212)
@@ -124,3 +125,10 @@ offset_right = -893.0
 offset_bottom = 1079.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32
+
+[node name="Profile" parent="." instance=ExtResource("4_l62tg")]
+offset_left = -731.0
+offset_top = 976.0
+offset_right = -731.0
+offset_bottom = 976.0
+scale = Vector2(3, 3)
