@@ -296,18 +296,15 @@ func _on_repo_completed(repo_node: Node):
 	if not repo_node.repo_name in Globals.completed_projects:
 		Globals.completed_projects.append(repo_node.repo_name)
 
-	# Unlock the next project
-	var current_repo_index = -1
-	for i in range(repos_data.size()):
-		if repos_data[i].get("name") == repo_node.repo_name:
-			current_repo_index = i
-			break
-
-	if current_repo_index != -1 and current_repo_index + 1 < repos_data.size():
-		var next_repo_name = repos_data[current_repo_index + 1].get("name")
-		if not next_repo_name in Globals.unlocked_projects and not next_repo_name in Globals.completed_projects:
-			Globals.unlocked_projects.append(next_repo_name)
-			print("Unlocked next project: " + next_repo_name)
+	# Unlock the next project if we have less than 5 active projects
+	if Globals.unlocked_projects.size() < 5:
+		# Find the next chronological project that's not completed
+		for i in range(repos_data.size()):
+			var repo_name = repos_data[i].get("name")
+			if not repo_name in Globals.unlocked_projects and not repo_name in Globals.completed_projects:
+				Globals.unlocked_projects.append(repo_name)
+				print("Unlocked next project: " + repo_name)
+				break
 
 	Globals.save_game()
 	generate_repositories() # Regenerate to update active/completed lists
