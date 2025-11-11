@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bfhu52byeed77"]
+[gd_scene load_steps=6 format=3 uid="uid://bfhu52byeed77"]
 
 [ext_resource type="Script" uid="uid://csafsuv32g3aq" path="res://scenes/misc/Repository.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://coekscx27ct6q" path="res://textures/github.svg" id="2"]
+[ext_resource type="Texture2D" uid="uid://du7kbk4e2n8gk" path="res://textures/link.svg" id="3_vg3te"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(230, 154.5)
@@ -74,12 +75,12 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="PointsLabel" type="Label" parent="."]
-offset_left = -38.0
-offset_top = 75.0
-offset_right = 97.0
-offset_bottom = 98.0
+offset_left = -55.5
+offset_top = 76.0
+offset_right = 79.5
+offset_bottom = 99.0
 theme_override_colors/font_color = Color(0.080783345, 0.080783345, 0.080783345, 1)
-text = "pps"
+text = "+#/s"
 horizontal_alignment = 1
 
 [node name="Body" type="ColorRect" parent="."]
@@ -95,9 +96,21 @@ offset_left = 114.0
 offset_top = 72.0
 offset_right = 146.0
 offset_bottom = 104.0
+focus_mode = 3
 mouse_default_cursor_shape = 2
 accessibility_description = "Go to this project on GitHub"
 icon = ExtResource("2")
+flat = true
+
+[node name="LinkButton" type="Button" parent="."]
+offset_left = 82.0
+offset_top = 72.5
+offset_right = 114.0
+offset_bottom = 104.5
+focus_mode = 3
+mouse_default_cursor_shape = 2
+accessibility_description = "Go to this project on GitHub"
+icon = ExtResource("3_vg3te")
 flat = true
 
 [node name="Tooltip" type="Label" parent="."]

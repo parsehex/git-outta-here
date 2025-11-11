@@ -15,6 +15,7 @@ signal repo_completed(repo_node: Node)
 @onready var description_label: Label = $LabelContainer/DescriptionLabel
 @onready var language_list: VBoxContainer = $LanguageList
 @onready var github_button: Button = $GitHubButton
+@onready var link_button: Button = $LinkButton
 @onready var tooltip: Label = $Tooltip
 @onready var points_label: Label = $PointsLabel
 
@@ -41,6 +42,10 @@ func _ready():
 		name_label.text = repo_name
 	if github_button:
 		github_button.pressed.connect(_on_github_button_pressed)
+	if link_button and repo_data.has("homepage"):
+		link_button.pressed.connect(_on_link_button_pressed)
+	else:
+		link_button.visible = false
 
 	# Initialize deposited amounts
 	for lang in repo_data.languages:
@@ -285,3 +290,10 @@ func _on_github_button_pressed():
 	if repo_data.has("html_url"):
 		OS.shell_open(repo_data.html_url)
 		print("Opening GitHub URL: " + repo_data.html_url)
+
+func _on_link_button_pressed():
+	if repo_data.has("homepage") and repo_data.homepage != null and repo_data.homepage != "":
+		OS.shell_open(repo_data.homepage)
+		print("Opening homepage URL: " + repo_data.homepage)
+	else:
+		print("No homepage URL available for this repository")
