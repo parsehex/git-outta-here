@@ -4,7 +4,7 @@ extends Area2D
 @export var language_color: Color = Color.WHITE
 @export var gather_rate: float = 1.0 # bytes per second when holding interact
 @export var accumulation_rate_increase_per_gather: float = 0.03 # How much the rate increases per gather
-@export var accumulation_rate_chance: float = 0.33 # Chance for accumulation rate to increase (0.0 to 1.0)
+@export var accumulation_rate_chance: float = 0.45 # Chance for accumulation rate to increase (0.0 to 1.0)
 
 signal mine_interacted(mine_node: Node)
 
