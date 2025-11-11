@@ -6,6 +6,7 @@ var lang_colors: Dictionary = {}
 var all_languages: Dictionary = {}
 var total_languages_needed = 0
 var total_languages_gathered = 0
+var player_in_upgrade_area = false
 
 # Scene references
 var repository_scene: PackedScene = preload("res://scenes/misc/Repository.tscn")
@@ -14,6 +15,8 @@ var mine_scene: PackedScene = preload("res://scenes/misc/Mine.tscn")
 # Node containers
 @onready var repositories_container: Node2D = $Spawnpoints/Projects
 @onready var mines_container: Node2D = $Spawnpoints/LangMines
+@onready var points_label: Label = $Spawnpoints/PointsLabel
+@onready var upgrade_area: Area2D = $Spawnpoints/Upgrades/UpgradeArea
 
 func load_data():
 	# Load repositories data
@@ -88,9 +91,16 @@ func _ready():
 
 	# Connect upgrade button
 	$Spawnpoints/Upgrades/FasterKeyboardButton.pressed.connect(_on_faster_keyboard_button_pressed)
+
+	# Connect upgrade area
+	if upgrade_area:
+		upgrade_area.body_entered.connect(_on_upgrade_area_body_entered)
+		upgrade_area.body_exited.connect(_on_upgrade_area_body_exited)
+
 	# Calculate total progress
 	_calculate_total_progress()
 	_update_upgrade_info()
+	_update_points_display()
 
 func _calculate_total_progress():
 	total_languages_needed = 0
@@ -150,15 +160,50 @@ func set_repository_progress(progress: Dictionary):
 				pass
 
 func _on_faster_keyboard_button_pressed():
-	if Globals.upgrades["Faster Keyboard"] < 5: # Max level 5
-		Globals.upgrades["Faster Keyboard"] += 1
+	var upgrade_name = "Faster Keyboard"
+	var current_level = Globals.upgrades[upgrade_name]
+	var cost = _get_upgrade_cost(upgrade_name, current_level)
+
+	if Globals.points >= cost and current_level < 25: # Max level 25
+		Globals.points -= cost
+		Globals.upgrades[upgrade_name] += 1
 		Globals.save_game()
 		_update_upgrade_info()
-		print("Upgraded Faster Keyboard to level " + str(Globals.upgrades["Faster Keyboard"]))
+		_update_points_display()
+		print("Upgraded Faster Keyboard to level " + str(Globals.upgrades[upgrade_name]) + " for " + str(cost) + " points")
+	else:
+		print("Not enough points or max level reached")
 	pass
+
+func _get_upgrade_cost(upgrade_name: String, current_level: int) -> int:
+	return int(pow(2, current_level) * 15)
+
+func _on_upgrade_area_body_entered(body):
+	if body.is_in_group("player"):
+		player_in_upgrade_area = true
+
+func _on_upgrade_area_body_exited(body):
+	if body.is_in_group("player"):
+		player_in_upgrade_area = false
 
 func _update_upgrade_info():
 	var level = Globals.upgrades["Faster Keyboard"]
 	var multiplier = 1.0 + (0.5 * level)
-	$Spawnpoints/Upgrades/UpgradeInfoLabel.text = "Level %d (+%.1fx accumulation)" % [level, multiplier]
+	var cost = _get_upgrade_cost("Faster Keyboard", level)
+	var cost_text = "" if level >= 25 else " - Cost: %d" % cost
+	$Spawnpoints/Upgrades/UpgradeInfoLabel.text = "Level %d (+%.1fx accumulation)%s" % [level, multiplier, cost_text]
 	pass
+
+func _update_points_display():
+	if points_label:
+		points_label.text = "%d" % Globals.points
+	pass
+
+func _process(delta):
+	_update_points_display()
+	_check_upgrade_interaction()
+
+func _check_upgrade_interaction():
+	if player_in_upgrade_area and Input.is_action_just_pressed("interact"):
+		$Spawnpoints/Upgrades/FasterKeyboardButton.grab_focus()
+		$Spawnpoints/Upgrades/FasterKeyboardButton.emit_signal("pressed")

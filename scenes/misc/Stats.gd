@@ -85,7 +85,7 @@ func _update_upgrades_listing():
 	pass
 
 func _on_faster_keyboard_button_pressed():
-	if Globals.upgrades["Faster Keyboard"] < 5: # Max level 5
+	if Globals.upgrades["Faster Keyboard"] < 25: # Max level 25
 		Globals.upgrades["Faster Keyboard"] += 1
 		_update_upgrades_listing()
 		Globals.save_game()

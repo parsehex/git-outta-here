@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://damx5ema0gns7"]
+[gd_scene load_steps=5 format=3 uid="uid://damx5ema0gns7"]
 
 [ext_resource type="PackedScene" uid="uid://deqgnj30xx13t" path="res://scenes/misc/UI.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://ctd3mgp0s172q" path="res://scenes/characters/Player.tscn" id="8"]
 [ext_resource type="Script" uid="uid://5mxd6smbwcxw" path="res://scenes/levels/Outside.gd" id="14_12345"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2t6p3"]
+size = Vector2(373.33334, 48)
 
 [node name="Outside" type="Node"]
 script = ExtResource("14_12345")
@@ -44,29 +47,43 @@ position = Vector2(-1033, 1212)
 scale = Vector2(1.5, 1.5)
 
 [node name="UpgradesLabel" type="Label" parent="Spawnpoints/Upgrades"]
-offset_left = -177.0
-offset_top = -210.0
-offset_right = 173.0
-offset_bottom = -31.0
+offset_left = -260.0
+offset_top = -147.33333
+offset_right = 90.0
+offset_bottom = 31.666672
 theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
 text = "Upgrades
 "
 
 [node name="FasterKeyboardButton" type="Button" parent="Spawnpoints/Upgrades"]
-offset_left = -207.0
-offset_top = -24.0
-offset_right = 167.0
-offset_bottom = 25.0
+offset_left = -280.0
+offset_top = -40.0
+offset_right = 94.0
+offset_bottom = 9.0
 theme_override_font_sizes/font_size = 24
-text = "Upgrade Faster Keyboard"
+text = "Get a faster keyboard"
 
 [node name="UpgradeInfoLabel" type="Label" parent="Spawnpoints/Upgrades"]
-offset_left = -207.0
-offset_top = 30.0
-offset_right = 167.0
-offset_bottom = 70.0
+offset_left = -281.33334
+offset_top = 23.333332
+offset_right = 92.66666
+offset_bottom = 63.333332
 theme_override_colors/font_color = Color(0.017732391, 0.017732391, 0.01773239, 1)
 theme_override_font_sizes/font_size = 18
 text = "Level 0 (+1.0x accumulation)"
 horizontal_alignment = 1
+
+[node name="UpgradeArea" type="Area2D" parent="Spawnpoints/Upgrades"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawnpoints/Upgrades/UpgradeArea"]
+position = Vector2(-93.33331, -16)
+shape = SubResource("RectangleShape2D_2t6p3")
+
+[node name="PointsLabel" type="Label" parent="Spawnpoints"]
+offset_left = -894.0
+offset_top = 1034.0
+offset_right = -893.0
+offset_bottom = 1079.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
