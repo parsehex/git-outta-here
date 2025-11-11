@@ -14,18 +14,19 @@ script = ExtResource("1")
 shape = SubResource("1")
 
 [node name="ProgressBar" type="ProgressBar" parent="."]
-offset_left = -40.0
-offset_top = -60.0
-offset_right = 40.0
-offset_bottom = -40.0
+z_index = 2
+offset_left = -39.5
+offset_top = -70.5
+offset_right = 40.5
+offset_bottom = -50.5
 value = 50.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="."]
 offset_left = -60.0
-offset_top = -27.0
+offset_top = -41.0
 offset_right = 61.0
-offset_bottom = -4.0
+offset_bottom = -18.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.627451)
 text = "LanguageName"
 horizontal_alignment = 1
@@ -46,7 +47,7 @@ offset_left = -49.5
 offset_top = 11.0
 offset_right = 50.0
 offset_bottom = 45.0
-theme_override_colors/font_color = Color(0.7666196, 0.76661956, 0.76661956, 1)
+theme_override_colors/font_color = Color(0.87545645, 0.8754565, 0.87545645, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.40392157)
 theme_override_font_sizes/font_size = 12
 horizontal_alignment = 1

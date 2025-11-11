@@ -9,6 +9,8 @@ var player_position = Vector2()
 var lang_colors: Dictionary = {}
 var mine_accumulation_rates: Dictionary = {} # Stores accumulation rates for each language mine
 var upgrades: Dictionary = {} # Stores upgrade states {upgrade_name: level}
+var unlocked_projects: Array = [] # List of unlocked project names
+var completed_projects: Array = [] # List of completed project names
 var pending_repository_data = null
 
 func format_bytes(bytes: float) -> String:
@@ -73,6 +75,8 @@ func save_game():
 	save_dict.quests = Quest.get_quest_list()
 	save_dict.mine_accumulation_rates = mine_accumulation_rates # Save mine accumulation rates
 	save_dict.upgrades = upgrades # Save upgrade states
+	save_dict.unlocked_projects = unlocked_projects
+	save_dict.completed_projects = completed_projects
 	# Save repository progress if available
 	var current_scene = get_tree().current_scene
 	if current_scene and current_scene.has_method("get_repository_progress"):
@@ -131,6 +135,11 @@ func _restore_data(save_dict):
 
 	if save_dict.has("upgrades"):
 		upgrades = save_dict.upgrades
+
+	if save_dict.has("unlocked_projects"):
+		unlocked_projects = save_dict.unlocked_projects
+	if save_dict.has("completed_projects"):
+		completed_projects = save_dict.completed_projects
 
 	# Restore repository progress if available
 	if save_dict.has("repository_progress"):

@@ -4,6 +4,7 @@ extends Area2D
 
 @export var repo_name: String = ""
 @export var repo_data: Dictionary = {}
+var completed: bool = false
 
 signal repo_interacted(repo_node: Node)
 signal repo_completed(repo_node: Node)
@@ -53,6 +54,7 @@ func _ready():
 
 	_update_language_list()
 	_update_labels()
+	set_completed(completed) # Apply completed state after setup
 	pass
 
 func _update_labels():
@@ -81,6 +83,9 @@ func _get_language_color(lang_name: String) -> Color:
 func _update_language_list():
 	if not language_list:
 		return
+
+	if completed:
+		language_list.visible = false
 
 	# Clear existing labels
 	for child in language_list.get_children():
@@ -279,12 +284,29 @@ func interact():
 func get_save_data() -> Dictionary:
 	return {
 		"name": repo_name,
-		"deposited": deposited.duplicate()
+		"deposited": deposited.duplicate(),
+		"completed": completed
 	}
 
 func load_save_data(data: Dictionary):
 	deposited = data.get("deposited", {})
+	completed = data.get("completed", false)
 	_update_language_list()
+	set_completed(completed)
+
+func set_completed(is_completed: bool):
+	completed = is_completed
+	if completed:
+		# Hide progress bar, range indicator, tooltip when completed
+		if progress_bar:
+			progress_bar.visible = false
+		if range_indicator:
+			range_indicator.visible = false
+		if tooltip:
+			tooltip.visible = false
+	else:
+		if language_list:
+			language_list.visible = true
 
 func _on_github_button_pressed():
 	if repo_data.has("html_url"):

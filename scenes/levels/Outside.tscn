@@ -25,19 +25,31 @@ theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
 text = "Lang Mines"
 
-[node name="ProjectsLabel" type="Label" parent="."]
+[node name="ActiveProjectsLabel" type="Label" parent="."]
 offset_left = -569.0
 offset_top = 150.0
 offset_right = -219.0
 offset_bottom = 238.0
 theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
-text = "Projects"
+text = "Active projects"
+
+[node name="CompleteProjectsLabel" type="Label" parent="."]
+offset_left = -596.0
+offset_top = -388.0
+offset_right = 23.0
+offset_bottom = -300.0
+theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
+theme_override_font_sizes/font_size = 64
+text = "\"Finished\" projects"
 
 [node name="Spawnpoints" type="Node" parent="."]
 
 [node name="Projects" type="Node2D" parent="Spawnpoints"]
 position = Vector2(-428, 405)
+
+[node name="CompleteProjects" type="Node2D" parent="Spawnpoints"]
+position = Vector2(-428, -191)
 
 [node name="LangMines" type="Node2D" parent="Spawnpoints"]
 position = Vector2(535, 1332)

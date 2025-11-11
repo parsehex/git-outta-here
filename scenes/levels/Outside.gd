@@ -8,6 +8,7 @@ var total_languages_needed = 0
 var total_languages_gathered = 0
 var player_in_fk_upgrade_area = false
 var player_in_lf_upgrade_area = false
+var _loaded_repo_save_data: Array = [] # Stores loaded repository save data to apply after generation
 
 # Scene references
 var repository_scene: PackedScene = preload("res://scenes/misc/Repository.tscn")
@@ -15,6 +16,7 @@ var mine_scene: PackedScene = preload("res://scenes/misc/Mine.tscn")
 
 # Node containers
 @onready var repositories_container: Node2D = $Spawnpoints/Projects
+@onready var complete_repositories_container: Node2D = $Spawnpoints/CompleteProjects
 @onready var mines_container: Node2D = $Spawnpoints/LangMines
 @onready var points_label: Label = $Spawnpoints/PointsLabel
 @onready var fk_upgrade_area: Area2D = $Spawnpoints/Upgrades/FKUpgradeArea
@@ -29,13 +31,31 @@ func load_data():
 		repos_data = repos_json.get_data()
 		repos_file.close()
 
-		# Collect all languages
+		# Sort repositories by 'created_at' in ascending order
+		repos_data.sort_custom(func(a, b):
+			var date_a = Time.get_datetime_dict_from_datetime_string(a.get("created_at", "1970-01-01T00:00:00Z"), false)
+			var date_b = Time.get_datetime_dict_from_datetime_string(b.get("created_at", "1970-01-01T00:00:00Z"), false)
+			var timestamp_a = Time.get_unix_time_from_datetime_dict(date_a)
+			var timestamp_b = Time.get_unix_time_from_datetime_dict(date_b)
+			return timestamp_a < timestamp_b
+		)
+
+		# Initialize unlocked_projects if empty, unlock the first 5 projects
+		if Globals.unlocked_projects.is_empty() and not repos_data.is_empty():
+			for i in range(min(repos_data.size(), 5)):
+				Globals.unlocked_projects.append(repos_data[i].get("name", "Unknown"))
+			Globals.save_game()
+
+		# Collect all languages from unlocked and completed projects
+		all_languages.clear() # Clear previous languages
 		for repo in repos_data:
-			if repo.has("languages"):
-				for lang in repo.languages:
-					if not all_languages.has(lang):
-						all_languages[lang] = 0
-					all_languages[lang] += repo.languages[lang]
+			var repo_name = repo.get("name", "Unknown")
+			if repo_name in Globals.unlocked_projects or repo_name in Globals.completed_projects:
+				if repo.has("languages"):
+					for lang in repo.languages:
+						if not all_languages.has(lang):
+							all_languages[lang] = 0
+						all_languages[lang] += repo.languages[lang]
 
 	# Load language colors from globals
 	lang_colors = Globals.lang_colors
@@ -43,27 +63,56 @@ func load_data():
 func generate_repositories():
 	var start_x = 0
 	var spacing = 550
+	var active_count = 0
 
-	for i in range(min(repos_data.size(), 10)): # Limit for testing
-		var repo = repos_data[i]
-		var repo_node = repository_scene.instantiate()
+	# Clear existing repositories
+	for child in repositories_container.get_children():
+		child.queue_free()
+	for child in complete_repositories_container.get_children():
+		child.queue_free()
 
-		repo_node.repo_name = repo.get("name", "Unknown")
-		repo_node.repo_data = repo
-		repo_node.position = Vector2(start_x + i * spacing, 0)
+	for repo_dict in repos_data:
+		var repo_name = repo_dict.get("name", "Unknown")
 
-		repositories_container.add_child(repo_node)
+		if repo_name in Globals.completed_projects:
+			var repo_node = repository_scene.instantiate()
+			repo_node.repo_name = repo_name
+			repo_node.repo_data = repo_dict
+			repo_node.position = Vector2(start_x + Globals.completed_projects.find(repo_name) * spacing, 0)
+			repo_node.set_completed(true) # Mark as completed
+			complete_repositories_container.add_child(repo_node)
+			repo_node.repo_completed.connect(_on_repo_completed)
+			# Apply save data if available
+			for save_data in _loaded_repo_save_data:
+				if save_data.get("name", "") == repo_name and repo_node.has_method("load_save_data"):
+					repo_node.load_save_data(save_data)
+					break
+		elif repo_name in Globals.unlocked_projects and active_count < 5: # Display up to 5 active projects
+			var repo_node = repository_scene.instantiate()
+			repo_node.repo_name = repo_name
+			repo_node.repo_data = repo_dict
+			repo_node.position = Vector2(start_x + active_count * spacing, 0)
+			repositories_container.add_child(repo_node)
+			repo_node.repo_completed.connect(_on_repo_completed)
+			# Apply save data if available
+			for save_data in _loaded_repo_save_data:
+				if save_data.get("name", "") == repo_name and repo_node.has_method("load_save_data"):
+					repo_node.load_save_data(save_data)
+					break
+			active_count += 1
 
 func generate_mines():
 	var start_x = 0
 	var spacing = 275
 	var vertical_spacing = 400
 
+	# Clear existing mines
+	for child in mines_container.get_children():
+		child.queue_free()
+
 	var lang_index = 0
 	for lang in all_languages:
-		if lang_index >= 20: # Limit for testing
-			break
-
+		# No longer limiting for testing, display all relevant languages
 		var mine_node = mine_scene.instantiate()
 
 		mine_node.language_name = lang
@@ -82,14 +131,20 @@ func _ready():
 	# Load data
 	load_data()
 
-	# Generate repositories and mines
+	# Generate repositories
 	generate_repositories()
-	generate_mines()
 
 	# Load repository save data if available
 	if Globals.pending_repository_data:
 		load_repository_save_data(Globals.pending_repository_data)
 		Globals.pending_repository_data = null
+		# After loading save data, regenerate repositories and mines to reflect the loaded state
+		load_data() # Reload data to update all_languages based on loaded projects
+		generate_repositories()
+		generate_mines()
+	else:
+		# If no pending data, generate mines initially
+		generate_mines()
 
 	# Connect upgrade buttons
 	$Spawnpoints/Upgrades/FasterKeyboardButton.pressed.connect(_on_faster_keyboard_button_pressed)
@@ -148,14 +203,7 @@ func get_repository_save_data() -> Array:
 	return save_data
 
 func load_repository_save_data(data: Array):
-	if not repositories_container:
-		return
-	for repo_data in data:
-		var repo_name = repo_data.get("name", "")
-		for repo_node in repositories_container.get_children():
-			if repo_node.repo_name == repo_name and repo_node.has_method("load_save_data"):
-				repo_node.load_save_data(repo_data)
-				break
+	_loaded_repo_save_data = data.duplicate() # Store the save data for later application
 
 func set_repository_progress(progress: Dictionary):
 	# Restore repository progress
@@ -240,6 +288,29 @@ func _update_points_display():
 func _process(delta):
 	_update_points_display()
 	_check_upgrade_interaction()
+
+func _on_repo_completed(repo_node: Node):
+	print("Repository completed: " + repo_node.repo_name)
+	if repo_node.repo_name in Globals.unlocked_projects:
+		Globals.unlocked_projects.erase(repo_node.repo_name)
+	if not repo_node.repo_name in Globals.completed_projects:
+		Globals.completed_projects.append(repo_node.repo_name)
+
+	# Unlock the next project
+	var current_repo_index = -1
+	for i in range(repos_data.size()):
+		if repos_data[i].get("name") == repo_node.repo_name:
+			current_repo_index = i
+			break
+
+	if current_repo_index != -1 and current_repo_index + 1 < repos_data.size():
+		var next_repo_name = repos_data[current_repo_index + 1].get("name")
+		if not next_repo_name in Globals.unlocked_projects and not next_repo_name in Globals.completed_projects:
+			Globals.unlocked_projects.append(next_repo_name)
+			print("Unlocked next project: " + next_repo_name)
+
+	Globals.save_game()
+	generate_repositories() # Regenerate to update active/completed lists
 
 func _check_upgrade_interaction():
 	if player_in_fk_upgrade_area and Input.is_action_just_pressed("interact"):
