@@ -7,7 +7,7 @@ It's just a dictionary where items are identified by a string key and hold an in
 
 # action can be 'added' some amount of some items is added and 'removed' when some amount
 # of some item is removed
-signal item_changed(action, type, amount, skip_status)
+signal item_changed(action, type, amount, skip_ui)
 signal money_changed(new_money: int)
 
 var inventory = {}
@@ -20,25 +20,25 @@ func get_item(type: String) -> int:
 		return 0
 
 
-func add_item(type: String, amount: int, skip_status = false) -> bool:
+func add_item(type: String, amount: int, skip_ui = false) -> bool:
 	if inventory.has(type):
 		inventory[type] += amount
-		emit_signal("item_changed", "added", type, amount, skip_status)
+		emit_signal("item_changed", "added", type, amount, skip_ui)
 		Globals.save_game()
 		return true
 	else:
 		inventory[type] = amount
-		emit_signal("item_changed", "added", type, amount, skip_status)
+		emit_signal("item_changed", "added", type, amount, skip_ui)
 		Globals.save_game()
 		return true
 
 
-func remove_item(type: String, amount: int, skip_status = false) -> bool:
+func remove_item(type: String, amount: int, skip_ui = false) -> bool:
 	if inventory.has(type) and inventory[type] >= amount:
 		inventory[type] -= amount
 		if inventory[type] == 0:
 			inventory.erase(type)
-		emit_signal("item_changed", "removed", type, amount, skip_status)
+		emit_signal("item_changed", "removed", type, amount, skip_ui)
 		Globals.save_game()
 		return true
 	else:

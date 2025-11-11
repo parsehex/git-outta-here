@@ -24,8 +24,8 @@ func _questlog_updated(quest_name, status):
 	_queue_message(txt)
 	pass
 
-func _inventory_updated(action, type, amount, skip_status):
-	if skip_status:
+func _inventory_updated(action, type, amount, skip_ui):
+	if skip_ui:
 		return
 	var txt
 	match action:

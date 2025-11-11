@@ -69,7 +69,7 @@ func _update_labels():
 	# Position points label below the label container
 	call_deferred("_update_points_position")
 
-func _on_inventory_changed(action, type, amount):
+func _on_inventory_changed(action, type, amount, skip_ui):
 	_update_language_list()
 
 

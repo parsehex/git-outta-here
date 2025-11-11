@@ -17,7 +17,7 @@ func _update_progress_display():
 			percentage = (total_languages_gathered / float(total_languages_needed)) * 100.0
 		progress_label.text = "Progress: %.1f%%" % percentage
 
-func _on_inventory_changed(action, type, amount):
+func _on_inventory_changed(action, type, amount, skip_ui):
 	# Update language tracking if it's a language item
 	if _is_language(type):
 		_update_progress_display()
