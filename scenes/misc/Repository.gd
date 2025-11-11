@@ -10,14 +10,22 @@ signal repo_completed(repo_node: Node)
 
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var range_indicator = $RangeIndicator
-@onready var name_label: Label = $NameLabel
+@onready var label_container: VBoxContainer = $LabelContainer
+@onready var name_label: Label = $LabelContainer/NameLabel
+@onready var description_label: Label = $LabelContainer/DescriptionLabel
 @onready var language_list: VBoxContainer = $LanguageList
+@onready var github_button: Button = $GitHubButton
+@onready var link_button: Button = $LinkButton
+@onready var tooltip: Label = $Tooltip
+@onready var points_label: Label = $PointsLabel
 
 var player_in_range = false
 var player_node = null
 var deposited = {}
 var deposit_progress = 0.0
 var deposit_duration = 0.75 # seconds to deposit
+var last_points_time = 0.0
+var points_rate = 1.5 # points per second based on filled percentage
 
 func _ready():
 	body_entered.connect(_on_body_entered)
@@ -28,15 +36,38 @@ func _ready():
 		progress_bar.visible = false
 	if range_indicator:
 		range_indicator.visible = false
+	if tooltip:
+		tooltip.visible = false
 	if name_label:
 		name_label.text = repo_name
+	if github_button:
+		github_button.pressed.connect(_on_github_button_pressed)
+	if link_button and repo_data.has("homepage"):
+		link_button.pressed.connect(_on_link_button_pressed)
+	else:
+		link_button.visible = false
 
 	# Initialize deposited amounts
 	for lang in repo_data.languages:
 		deposited[lang] = 0
 
 	_update_language_list()
+	_update_labels()
 	pass
+
+func _update_labels():
+	if name_label:
+		name_label.text = repo_name
+
+	# Set description if available
+	if description_label and repo_data.has("description") and repo_data.description != null:
+		description_label.text = repo_data.description
+		description_label.visible = true
+	else:
+		description_label.visible = false
+
+	# Position points label below the label container
+	call_deferred("_update_points_position")
 
 func _on_inventory_changed(action, type, amount):
 	_update_language_list()
@@ -80,7 +111,7 @@ func _update_language_list():
 
 		# Black rest of the text label
 		var rest_label = Label.new()
-		rest_label.text = ": " + str(current) + "/" + str(required) + " bytes"
+		rest_label.text = ": " + Globals.format_bytes(current) + "/" + Globals.format_bytes(required)
 		rest_label.modulate = Color(0, 0, 0, 1)
 		hbox.add_child(rest_label)
 
@@ -89,7 +120,16 @@ func _update_language_list():
 	for label in labels:
 		language_list.add_child(label)
 
+	# Update points position after language list is updated
+	call_deferred("_update_points_position")
+
+func _update_points_position():
+	pass
+
 func _process(delta):
+	# Generate points based on completion percentage
+	_generate_points(delta)
+
 	if player_in_range and player_node and Input.is_action_pressed("interact"):
 		# Check if player has any languages to deposit
 		if _has_required_languages():
@@ -129,6 +169,40 @@ func _has_required_languages() -> bool:
 			return true
 	return false
 
+func _generate_points(delta):
+	var current_time = Time.get_ticks_msec() / 1000.0
+	if last_points_time == 0.0:
+		last_points_time = current_time
+		return
+
+	var time_passed = current_time - last_points_time
+	last_points_time = current_time
+
+	# Calculate completion percentage
+	var total_required = 0
+	var total_deposited = 0
+	for lang in repo_data.languages:
+		total_required += repo_data.languages[lang]
+		total_deposited += deposited[lang]
+
+	if total_required > 0:
+		var completion_ratio = float(total_deposited) / float(total_required)
+		# Scale points rate based on repository size (total bytes required)
+		# Larger repos generate more points: base_rate * sqrt(total_bytes / 1000) * completion_ratio
+		var size_multiplier = sqrt(total_required / 1000.0)
+		var adjusted_rate = points_rate * size_multiplier
+		var points_earned = adjusted_rate * completion_ratio * time_passed
+		Globals.points += points_earned
+
+		# Update points generation display
+		if points_label:
+			var points_per_second = adjusted_rate * completion_ratio
+			if points_per_second > 0.001: # Only show if generating meaningful points
+				points_label.text = "+%.2f/s" % points_per_second
+				points_label.visible = true
+			else:
+				points_label.visible = false
+
 func _deposit_completed():
 	if not repo_data.has("languages"):
 		return
@@ -154,10 +228,18 @@ func _deposit_completed():
 
 	if completed:
 		repo_completed.emit(self)
-		print("Repository " + repo_name + " completed!")
+		# Award points based on total bytes required for this repository
+		var total_bytes = 0
+		for lang in repo_data.languages:
+			total_bytes += repo_data.languages[lang]
+		var points_earned = int(total_bytes / 1000) + 1 # 1 point per 1000 bytes, minimum 1 point
+		Globals.points += points_earned
+		print("Repository " + repo_name + " completed! Earned " + str(points_earned) + " points.")
 
 	if range_indicator:
 		range_indicator.visible = false
+	if tooltip:
+		tooltip.visible = false
 
 func _on_body_entered(body):
 	if body is Player:
@@ -172,6 +254,8 @@ func _on_body_entered(body):
 					break
 			if not completed and _has_required_languages():
 				range_indicator.visible = true
+				if tooltip:
+					tooltip.visible = true
 		print("Player entered repository area: " + repo_name)
 
 func _on_body_exited(body):
@@ -183,6 +267,8 @@ func _on_body_exited(body):
 			progress_bar.visible = false
 		if range_indicator:
 			range_indicator.visible = false
+		if tooltip:
+			tooltip.visible = false
 		print("Player exited repository area: " + repo_name)
 
 func interact():
@@ -199,3 +285,15 @@ func get_save_data() -> Dictionary:
 func load_save_data(data: Dictionary):
 	deposited = data.get("deposited", {})
 	_update_language_list()
+
+func _on_github_button_pressed():
+	if repo_data.has("html_url"):
+		OS.shell_open(repo_data.html_url)
+		print("Opening GitHub URL: " + repo_data.html_url)
+
+func _on_link_button_pressed():
+	if repo_data.has("homepage") and repo_data.homepage != null and repo_data.homepage != "":
+		OS.shell_open(repo_data.homepage)
+		print("Opening homepage URL: " + repo_data.homepage)
+	else:
+		print("No homepage URL available for this repository")

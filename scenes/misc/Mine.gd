@@ -75,7 +75,10 @@ func _gather_completed():
 
 	# Increase accumulation rate with a random chance
 	if randf() < accumulation_rate_chance:
-		current_accumulation_rate += accumulation_rate_increase_per_gather
+		var increase = accumulation_rate_increase_per_gather
+		if Globals.upgrades.has("Faster Keyboard"):
+			increase *= (1.0 + (0.5 * Globals.upgrades["Faster Keyboard"]))
+		current_accumulation_rate += increase
 		Globals.mine_accumulation_rates[language_name] = current_accumulation_rate
 		print("Accumulation rate for " + language_name + " increased to: " + str(current_accumulation_rate))
 
@@ -98,7 +101,7 @@ func _on_body_exited(body):
 func _update_labels():
 	if count_label and language_name != "":
 		var current_count = Inventory.get_item(language_name)
-		count_label.text = str(current_count) + " bytes"
+		count_label.text = Globals.format_bytes(current_count)
 
 	if accumulation_rate_label and language_name != "" and current_accumulation_rate > 0:
 		accumulation_rate_label.text = "Rate: " + "%.2f" % current_accumulation_rate + " b/s"

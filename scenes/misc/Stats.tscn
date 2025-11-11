@@ -76,10 +76,39 @@ theme_override_fonts/font = ExtResource("3")
 text = "Item 1
 "
 
-[node name="Exit" type="Button" parent="VBoxContainer"]
+[node name="Upgrades" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="VBoxContainer/HBoxContainer/Upgrades"]
+visible = false
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2")
+text = "Upgrades"
+horizontal_alignment = 1
+
+[node name="Details" type="Label" parent="VBoxContainer/HBoxContainer/Upgrades"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("3")
+text = "Upgrade details"
+
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="FasterKeyboardButton" type="Button" parent="VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2")
+text = "Upgrade Faster Keyboard"
+flat = true
+
+[node name="Exit" type="Button" parent="VBoxContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2")
 text = "EXIT"
 flat = true
 
-[connection signal="pressed" from="VBoxContainer/Exit" to="." method="_on_Exit_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer2/FasterKeyboardButton" to="." method="_on_faster_keyboard_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VBoxContainer2/Exit" to="." method="_on_Exit_pressed"]
