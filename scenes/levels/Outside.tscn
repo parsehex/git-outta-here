@@ -93,7 +93,7 @@ offset_top = 78.666664
 offset_right = 93.33331
 offset_bottom = 127.666664
 theme_override_font_sizes/font_size = 24
-text = "Get a faster keyboard"
+text = "Find luckier hands"
 
 [node name="LuckyFingersInfoLabel" type="Label" parent="Spawnpoints/Upgrades"]
 offset_left = -280.00003

@@ -39,10 +39,10 @@ offset_bottom = 166.0
 alignment = 1
 
 [node name="LabelContainer" type="VBoxContainer" parent="."]
-offset_left = -74.0
-offset_top = -39.5
-offset_right = 142.5
-offset_bottom = 69.0
+offset_left = -77.0
+offset_top = -40.0
+offset_right = 143.0
+offset_bottom = 70.0
 
 [node name="NameLabel" type="Label" parent="LabelContainer"]
 layout_mode = 2
