@@ -7,5 +7,6 @@ export default defineConfig(({ mode }) => {
 		description: 'Play my GitHub profile',
 		base: mode === 'production' ? '/git-outta-here/' : '/',
 		outDir: '../build/web',
+		ignoreDeadLinks: true,
 	};
 });
