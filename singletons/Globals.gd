@@ -54,6 +54,8 @@ func _initialize_upgrades():
 	# Define available upgrades
 	if not upgrades.has("Faster Keyboard"):
 		upgrades["Faster Keyboard"] = 0
+	if not upgrades.has("Lucky Fingers"):
+		upgrades["Lucky Fingers"] = 0
 
 	pass
 """

@@ -78,6 +78,9 @@ func _update_upgrades_listing():
 		if upgrade == "Faster Keyboard":
 			var multiplier = 1.0 + (0.5 * level)
 			text += " (+%.1fx accumulation)" % multiplier
+		elif upgrade == "Lucky Fingers":
+			var chance_increase = level * 10
+			text += " (+%d%% auto rate chance)" % chance_increase
 		text += "\n"
 	if text == "":
 		text = "[None]"

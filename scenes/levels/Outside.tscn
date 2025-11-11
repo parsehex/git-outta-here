@@ -64,21 +64,46 @@ offset_bottom = 9.0
 theme_override_font_sizes/font_size = 24
 text = "Get a faster keyboard"
 
-[node name="UpgradeInfoLabel" type="Label" parent="Spawnpoints/Upgrades"]
-offset_left = -281.33334
-offset_top = 23.333332
-offset_right = 92.66666
-offset_bottom = 63.333332
+[node name="FasterKeyboardInfoLabel" type="Label" parent="Spawnpoints/Upgrades"]
+offset_left = -280.6667
+offset_top = 14.666665
+offset_right = 93.33331
+offset_bottom = 54.666664
 theme_override_colors/font_color = Color(0.017732391, 0.017732391, 0.01773239, 1)
 theme_override_font_sizes/font_size = 18
 text = "Level 0 (+1.0x accumulation)"
 horizontal_alignment = 1
 
-[node name="UpgradeArea" type="Area2D" parent="Spawnpoints/Upgrades"]
+[node name="FKUpgradeArea" type="Area2D" parent="Spawnpoints/Upgrades"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawnpoints/Upgrades/UpgradeArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawnpoints/Upgrades/FKUpgradeArea"]
 position = Vector2(-93.33331, -16)
 shape = SubResource("RectangleShape2D_2t6p3")
+
+[node name="LFUpgradeArea" type="Area2D" parent="Spawnpoints/Upgrades"]
+position = Vector2(0.6666667, 118.66667)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spawnpoints/Upgrades/LFUpgradeArea"]
+position = Vector2(-94.66665, -15.333333)
+shape = SubResource("RectangleShape2D_2t6p3")
+
+[node name="LuckyFingersButton" type="Button" parent="Spawnpoints/Upgrades"]
+offset_left = -280.6667
+offset_top = 78.666664
+offset_right = 93.33331
+offset_bottom = 127.666664
+theme_override_font_sizes/font_size = 24
+text = "Get a faster keyboard"
+
+[node name="LuckyFingersInfoLabel" type="Label" parent="Spawnpoints/Upgrades"]
+offset_left = -280.00003
+offset_top = 135.33336
+offset_right = 93.99997
+offset_bottom = 175.33336
+theme_override_colors/font_color = Color(0.017732391, 0.017732391, 0.01773239, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level 0"
+horizontal_alignment = 1
 
 [node name="PointsLabel" type="Label" parent="Spawnpoints"]
 offset_left = -894.0

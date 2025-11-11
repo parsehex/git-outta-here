@@ -4,7 +4,7 @@ extends Area2D
 @export var language_color: Color = Color.WHITE
 @export var gather_rate: float = 1.0 # bytes per second when holding interact
 @export var accumulation_rate_increase_per_gather: float = 0.03 # How much the rate increases per gather
-@export var accumulation_rate_chance: float = 0.45 # Chance for accumulation rate to increase (0.0 to 1.0)
+@export var accumulation_rate_chance: float = 0.28 # Chance for accumulation rate to increase (0.0 to 1.0)
 
 signal mine_interacted(mine_node: Node)
 
@@ -73,7 +73,12 @@ func _gather_completed():
 	print("Gathered " + str(bytes_gathered) + " bytes of " + language_name)
 
 	# Increase accumulation rate with a random chance
-	if randf() < accumulation_rate_chance:
+	var effective_chance = accumulation_rate_chance
+	if Globals.upgrades.has("Lucky Fingers"):
+		effective_chance += Globals.upgrades["Lucky Fingers"] * 0.7 # +7% chance per level
+	effective_chance = min(effective_chance, 0.85) # Cap at 85%
+
+	if randf() < effective_chance:
 		var increase = accumulation_rate_increase_per_gather
 		if Globals.upgrades.has("Faster Keyboard"):
 			increase *= (1.0 + (0.5 * Globals.upgrades["Faster Keyboard"]))

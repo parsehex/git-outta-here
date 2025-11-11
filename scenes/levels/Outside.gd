@@ -6,7 +6,8 @@ var lang_colors: Dictionary = {}
 var all_languages: Dictionary = {}
 var total_languages_needed = 0
 var total_languages_gathered = 0
-var player_in_upgrade_area = false
+var player_in_fk_upgrade_area = false
+var player_in_lf_upgrade_area = false
 
 # Scene references
 var repository_scene: PackedScene = preload("res://scenes/misc/Repository.tscn")
@@ -16,7 +17,8 @@ var mine_scene: PackedScene = preload("res://scenes/misc/Mine.tscn")
 @onready var repositories_container: Node2D = $Spawnpoints/Projects
 @onready var mines_container: Node2D = $Spawnpoints/LangMines
 @onready var points_label: Label = $Spawnpoints/PointsLabel
-@onready var upgrade_area: Area2D = $Spawnpoints/Upgrades/UpgradeArea
+@onready var fk_upgrade_area: Area2D = $Spawnpoints/Upgrades/FKUpgradeArea
+@onready var lf_upgrade_area: Area2D = $Spawnpoints/Upgrades/LFUpgradeArea
 
 func load_data():
 	# Load repositories data
@@ -89,13 +91,17 @@ func _ready():
 		load_repository_save_data(Globals.pending_repository_data)
 		Globals.pending_repository_data = null
 
-	# Connect upgrade button
+	# Connect upgrade buttons
 	$Spawnpoints/Upgrades/FasterKeyboardButton.pressed.connect(_on_faster_keyboard_button_pressed)
+	$Spawnpoints/Upgrades/LuckyFingersButton.pressed.connect(_on_lucky_fingers_button_pressed)
 
-	# Connect upgrade area
-	if upgrade_area:
-		upgrade_area.body_entered.connect(_on_upgrade_area_body_entered)
-		upgrade_area.body_exited.connect(_on_upgrade_area_body_exited)
+	# Connect upgrade areas
+	if fk_upgrade_area:
+		fk_upgrade_area.body_entered.connect(_on_fk_upgrade_area_body_entered)
+		fk_upgrade_area.body_exited.connect(_on_fk_upgrade_area_body_exited)
+	if lf_upgrade_area:
+		lf_upgrade_area.body_entered.connect(_on_lf_upgrade_area_body_entered)
+		lf_upgrade_area.body_exited.connect(_on_lf_upgrade_area_body_exited)
 
 	# Calculate total progress
 	_calculate_total_progress()
@@ -175,23 +181,55 @@ func _on_faster_keyboard_button_pressed():
 		print("Not enough points or max level reached")
 	pass
 
+func _on_lucky_fingers_button_pressed():
+	var upgrade_name = "Lucky Fingers"
+	var current_level = Globals.upgrades[upgrade_name]
+	var cost = _get_upgrade_cost(upgrade_name, current_level)
+
+	if Globals.points >= cost and current_level < 25: # Max level 25
+		Globals.points -= cost
+		Globals.upgrades[upgrade_name] += 1
+		Globals.save_game()
+		_update_upgrade_info()
+		_update_points_display()
+		print("Upgraded Lucky Fingers to level " + str(Globals.upgrades[upgrade_name]) + " for " + str(cost) + " points")
+	else:
+		print("Not enough points or max level reached")
+	pass
+
 func _get_upgrade_cost(upgrade_name: String, current_level: int) -> int:
 	return int(pow(2, current_level) * 15)
 
-func _on_upgrade_area_body_entered(body):
+func _on_fk_upgrade_area_body_entered(body):
 	if body.is_in_group("player"):
-		player_in_upgrade_area = true
+		player_in_fk_upgrade_area = true
 
-func _on_upgrade_area_body_exited(body):
+func _on_fk_upgrade_area_body_exited(body):
 	if body.is_in_group("player"):
-		player_in_upgrade_area = false
+		player_in_fk_upgrade_area = false
+
+func _on_lf_upgrade_area_body_entered(body):
+	if body.is_in_group("player"):
+		player_in_lf_upgrade_area = true
+
+func _on_lf_upgrade_area_body_exited(body):
+	if body.is_in_group("player"):
+		player_in_lf_upgrade_area = false
 
 func _update_upgrade_info():
 	var level = Globals.upgrades["Faster Keyboard"]
 	var multiplier = 1.0 + (0.5 * level)
 	var cost = _get_upgrade_cost("Faster Keyboard", level)
 	var cost_text = "" if level >= 25 else " - Cost: %d" % cost
-	$Spawnpoints/Upgrades/UpgradeInfoLabel.text = "Level %d (+%.1fx accumulation)%s" % [level, multiplier, cost_text]
+	$Spawnpoints/Upgrades/FasterKeyboardInfoLabel.text = "Level %d (+%.1fx accumulation)%s" % [level, multiplier, cost_text]
+
+	# Update Lucky Fingers info
+	var lucky_level = Globals.upgrades["Lucky Fingers"]
+	var lucky_chance = lucky_level * 0.1
+	var total_chance = lucky_level * 0.1 + 0.28
+	var lucky_cost = _get_upgrade_cost("Lucky Fingers", lucky_level)
+	var lucky_cost_text = "" if lucky_level >= 25 else " - Cost: %d" % lucky_cost
+	$Spawnpoints/Upgrades/LuckyFingersInfoLabel.text = "Level %d (+%.1f - %.1f%% total chance)%s" % [lucky_level, lucky_chance * 100, total_chance * 100, lucky_cost_text]
 	pass
 
 func _update_points_display():
@@ -204,6 +242,9 @@ func _process(delta):
 	_check_upgrade_interaction()
 
 func _check_upgrade_interaction():
-	if player_in_upgrade_area and Input.is_action_just_pressed("interact"):
+	if player_in_fk_upgrade_area and Input.is_action_just_pressed("interact"):
 		$Spawnpoints/Upgrades/FasterKeyboardButton.grab_focus()
 		$Spawnpoints/Upgrades/FasterKeyboardButton.emit_signal("pressed")
+	if player_in_lf_upgrade_area and Input.is_action_just_pressed("interact"):
+		$Spawnpoints/Upgrades/LuckyFingersButton.grab_focus()
+		$Spawnpoints/Upgrades/LuckyFingersButton.emit_signal("pressed")
