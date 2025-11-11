@@ -10,7 +10,9 @@ signal repo_completed(repo_node: Node)
 
 @onready var progress_bar: ProgressBar = $ProgressBar
 @onready var range_indicator = $RangeIndicator
-@onready var name_label: Label = $NameLabel
+@onready var label_container: VBoxContainer = $LabelContainer
+@onready var name_label: Label = $LabelContainer/NameLabel
+@onready var description_label: Label = $LabelContainer/DescriptionLabel
 @onready var language_list: VBoxContainer = $LanguageList
 @onready var github_button: Button = $GitHubButton
 @onready var tooltip: Label = $Tooltip
@@ -45,7 +47,22 @@ func _ready():
 		deposited[lang] = 0
 
 	_update_language_list()
+	_update_labels()
 	pass
+
+func _update_labels():
+	if name_label:
+		name_label.text = repo_name
+
+	# Set description if available
+	if description_label and repo_data.has("description") and repo_data.description != null:
+		description_label.text = repo_data.description
+		description_label.visible = true
+	else:
+		description_label.visible = false
+
+	# Position points label below the label container
+	call_deferred("_update_points_position")
 
 func _on_inventory_changed(action, type, amount):
 	_update_language_list()
@@ -97,6 +114,12 @@ func _update_language_list():
 
 	for label in labels:
 		language_list.add_child(label)
+
+	# Update points position after language list is updated
+	call_deferred("_update_points_position")
+
+func _update_points_position():
+	pass
 
 func _process(delta):
 	# Generate points based on completion percentage

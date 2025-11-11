@@ -17,10 +17,10 @@ position = Vector2(515, 819)
 [node name="UI" parent="." instance=ExtResource("2")]
 
 [node name="LangMinesLabel" type="Label" parent="."]
-offset_left = 571.0
-offset_top = 933.0
-offset_right = 921.0
-offset_bottom = 1021.0
+offset_left = 599.0
+offset_top = 1080.0
+offset_right = 949.0
+offset_bottom = 1168.0
 theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
 text = "Lang Mines"
@@ -40,7 +40,7 @@ text = "Projects"
 position = Vector2(-428, 405)
 
 [node name="LangMines" type="Node2D" parent="Spawnpoints"]
-position = Vector2(544, 1167)
+position = Vector2(535, 1332)
 
 [node name="Upgrades" type="Node2D" parent="Spawnpoints"]
 position = Vector2(-1033, 1212)
