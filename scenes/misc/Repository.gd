@@ -19,6 +19,7 @@ signal repo_completed(repo_node: Node)
 @onready var link_button: Button = $LinkButton
 @onready var tooltip: Label = $Tooltip
 @onready var points_label: Label = $PointsLabel
+@onready var year_label: Label = $YearLabel
 
 var player_in_range = false
 var player_node = null
@@ -67,6 +68,14 @@ func _update_labels():
 		description_label.visible = true
 	else:
 		description_label.visible = false
+
+	if year_label and repo_data.has("created_at"):
+		var created_at = repo_data.created_at
+		var year = created_at.substr(0, 4)
+		year_label.text = year
+		year_label.visible = true
+	else:
+		year_label.visible = false
 
 	# Position points label below the label container
 	call_deferred("_update_points_position")

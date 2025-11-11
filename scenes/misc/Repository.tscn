@@ -64,12 +64,22 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="PointsLabel" type="Label" parent="."]
-offset_left = -55.5
+offset_left = -44.0
 offset_top = 76.0
-offset_right = 79.5
+offset_right = 91.0
 offset_bottom = 99.0
 theme_override_colors/font_color = Color(0.080783345, 0.080783345, 0.080783345, 1)
 text = "+#/s"
+horizontal_alignment = 1
+
+[node name="YearLabel" type="Label" parent="."]
+offset_left = -77.0
+offset_top = 77.0
+offset_right = -37.0
+offset_bottom = 97.0
+theme_override_colors/font_color = Color(0.22670749, 0.22670749, 0.22670746, 1)
+theme_override_font_sizes/font_size = 14
+text = "####"
 horizontal_alignment = 1
 
 [node name="Body" type="ColorRect" parent="."]
