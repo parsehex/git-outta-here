@@ -1,6 +1,6 @@
 # git-outta-here
 
-![Screenshot of the game Git Outta Here](./goh-screenshot-2.png)
+![Screenshot of the game Git Outta Here](./goh-screenshot-3.png)
 
 Have you ever wanted to **_play_** a GitHub profile? That's what this is -- at least in the form of an incremental game.
 
