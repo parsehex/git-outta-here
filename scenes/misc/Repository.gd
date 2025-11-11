@@ -80,7 +80,7 @@ func _update_language_list():
 
 		# Black rest of the text label
 		var rest_label = Label.new()
-		rest_label.text = ": " + str(current) + "/" + str(required) + " bytes"
+		rest_label.text = ": " + Globals.format_bytes(current) + "/" + Globals.format_bytes(required)
 		rest_label.modulate = Color(0, 0, 0, 1)
 		hbox.add_child(rest_label)
 

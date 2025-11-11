@@ -9,6 +9,23 @@ var lang_colors: Dictionary = {}
 var mine_accumulation_rates: Dictionary = {} # Stores accumulation rates for each language mine
 var pending_repository_data = null
 
+func format_bytes(bytes: float) -> String:
+	if bytes == 0:
+		return "0 bytes"
+
+	var units = ["bytes", "KB", "MB", "GB", "TB"]
+	var unit_index = 0
+	var value = bytes
+
+	while value >= 1024 and unit_index < units.size() - 1:
+		value /= 1024.0
+		unit_index += 1
+
+	if unit_index == 0:
+		return str(int(bytes)) + " " + units[unit_index]
+	else:
+		return "%.1f %s" % [value, units[unit_index]]
+
 func _ready():
 	RenderingServer.set_default_clear_color(Color.WHITE)
 	_load_language_colors()

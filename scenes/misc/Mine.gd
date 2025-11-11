@@ -98,7 +98,7 @@ func _on_body_exited(body):
 func _update_labels():
 	if count_label and language_name != "":
 		var current_count = Inventory.get_item(language_name)
-		count_label.text = str(current_count) + " bytes"
+		count_label.text = Globals.format_bytes(current_count)
 
 	if accumulation_rate_label and language_name != "" and current_accumulation_rate > 0:
 		accumulation_rate_label.text = "Rate: " + "%.2f" % current_accumulation_rate + " b/s"

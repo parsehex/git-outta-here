@@ -57,7 +57,7 @@ func _update_item_listing():
 	else:
 		languages.sort()
 		for lang in languages:
-			text += "%s: %s bytes\n" % [lang, inventory[lang]]
+			text += "%s: %s\n" % [lang, Globals.format_bytes(inventory[lang])]
 	_update_inventory_details(text)
 	pass
 
