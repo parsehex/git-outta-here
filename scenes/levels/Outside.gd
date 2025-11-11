@@ -86,8 +86,11 @@ func _ready():
 		load_repository_save_data(Globals.pending_repository_data)
 		Globals.pending_repository_data = null
 
+	# Connect upgrade button
+	$Spawnpoints/Upgrades/FasterKeyboardButton.pressed.connect(_on_faster_keyboard_button_pressed)
 	# Calculate total progress
 	_calculate_total_progress()
+	_update_upgrade_info()
 
 func _calculate_total_progress():
 	total_languages_needed = 0
@@ -145,3 +148,17 @@ func set_repository_progress(progress: Dictionary):
 			if repo_node.repo_name == repo_name:
 				# Set completion state if needed
 				pass
+
+func _on_faster_keyboard_button_pressed():
+	if Globals.upgrades["Faster Keyboard"] < 5: # Max level 5
+		Globals.upgrades["Faster Keyboard"] += 1
+		Globals.save_game()
+		_update_upgrade_info()
+		print("Upgraded Faster Keyboard to level " + str(Globals.upgrades["Faster Keyboard"]))
+	pass
+
+func _update_upgrade_info():
+	var level = Globals.upgrades["Faster Keyboard"]
+	var multiplier = 1.0 + (0.5 * level)
+	$Spawnpoints/Upgrades/UpgradeInfoLabel.text = "Level %d (+%.1fx accumulation)" % [level, multiplier]
+	pass

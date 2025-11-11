@@ -19,6 +19,7 @@ func _input(event):
 			_update_quest_listing()
 			_update_item_listing()
 			_update_language_listing()
+			_update_upgrades_listing()
 
 func _update_quest_listing():
 	var text = ""
@@ -69,6 +70,26 @@ func _is_language(language_name: String) -> bool:
 	# For now, assume all items that aren't standard inventory are languages
 	var standard_items = ["wood", "money"] # Add more as needed
 	return not standard_items.has(language_name)
+func _update_upgrades_listing():
+	var text = ""
+	for upgrade in Globals.upgrades:
+		var level = Globals.upgrades[upgrade]
+		text += "%s: Level %d" % [upgrade, level]
+		if upgrade == "Faster Keyboard":
+			var multiplier = 1.0 + (0.5 * level)
+			text += " (+%.1fx accumulation)" % multiplier
+		text += "\n"
+	if text == "":
+		text = "[None]"
+	$VBoxContainer/HBoxContainer/Upgrades/Details.text = text
+	pass
+
+func _on_faster_keyboard_button_pressed():
+	if Globals.upgrades["Faster Keyboard"] < 5: # Max level 5
+		Globals.upgrades["Faster Keyboard"] += 1
+		_update_upgrades_listing()
+		Globals.save_game()
+	pass
 
 
 func _on_Exit_pressed():

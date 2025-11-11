@@ -7,6 +7,7 @@ var money = 0
 var player_position = Vector2()
 var lang_colors: Dictionary = {}
 var mine_accumulation_rates: Dictionary = {} # Stores accumulation rates for each language mine
+var upgrades: Dictionary = {} # Stores upgrade states {upgrade_name: level}
 var pending_repository_data = null
 
 func format_bytes(bytes: float) -> String:
@@ -29,6 +30,7 @@ func format_bytes(bytes: float) -> String:
 func _ready():
 	RenderingServer.set_default_clear_color(Color.WHITE)
 	_load_language_colors()
+	_initialize_upgrades()
 
 func _load_language_colors():
 	var colors_file = "res://data/lang-colors.json"
@@ -47,6 +49,12 @@ func _load_language_colors():
 					if color_hex != null and color_hex is String and color_hex.begins_with("#"):
 						lang_colors[lang_name] = Color(color_hex)
 
+func _initialize_upgrades():
+	# Define available upgrades
+	if not upgrades.has("Faster Keyboard"):
+		upgrades["Faster Keyboard"] = 0
+
+	pass
 """
 Really simple save file implementation. Just saving some variables to a dictionary
 """
@@ -60,6 +68,7 @@ func save_game():
 	save_dict.inventory = Inventory.list()
 	save_dict.quests = Quest.get_quest_list()
 	save_dict.mine_accumulation_rates = mine_accumulation_rates # Save mine accumulation rates
+	save_dict.upgrades = upgrades # Save upgrade states
 	# Save repository progress if available
 	var current_scene = get_tree().current_scene
 	if current_scene and current_scene.has_method("get_repository_progress"):
@@ -113,6 +122,9 @@ func _restore_data(save_dict):
 
 	if save_dict.has("mine_accumulation_rates"):
 		mine_accumulation_rates = save_dict.mine_accumulation_rates
+
+	if save_dict.has("upgrades"):
+		upgrades = save_dict.upgrades
 
 	# Restore repository progress if available
 	if save_dict.has("repository_progress"):

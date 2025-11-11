@@ -41,13 +41,32 @@ position = Vector2(544, 1167)
 
 [node name="Upgrades" type="Node2D" parent="Spawnpoints"]
 position = Vector2(-1033, 1212)
+scale = Vector2(1.5, 1.5)
 
 [node name="UpgradesLabel" type="Label" parent="Spawnpoints/Upgrades"]
-offset_left = -135.0
-offset_top = -216.0
-offset_right = 215.0
-offset_bottom = -37.0
+offset_left = -177.0
+offset_top = -210.0
+offset_right = 173.0
+offset_bottom = -31.0
 theme_override_colors/font_color = Color(0, 0, 0, 0.78431374)
 theme_override_font_sizes/font_size = 64
 text = "Upgrades
 "
+
+[node name="FasterKeyboardButton" type="Button" parent="Spawnpoints/Upgrades"]
+offset_left = -207.0
+offset_top = -24.0
+offset_right = 167.0
+offset_bottom = 25.0
+theme_override_font_sizes/font_size = 24
+text = "Upgrade Faster Keyboard"
+
+[node name="UpgradeInfoLabel" type="Label" parent="Spawnpoints/Upgrades"]
+offset_left = -207.0
+offset_top = 30.0
+offset_right = 167.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0.017732391, 0.017732391, 0.01773239, 1)
+theme_override_font_sizes/font_size = 18
+text = "Level 0 (+1.0x accumulation)"
+horizontal_alignment = 1

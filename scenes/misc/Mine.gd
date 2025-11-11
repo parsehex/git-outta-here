@@ -75,7 +75,10 @@ func _gather_completed():
 
 	# Increase accumulation rate with a random chance
 	if randf() < accumulation_rate_chance:
-		current_accumulation_rate += accumulation_rate_increase_per_gather
+		var increase = accumulation_rate_increase_per_gather
+		if Globals.upgrades.has("Faster Keyboard"):
+			increase *= (1.0 + (0.5 * Globals.upgrades["Faster Keyboard"]))
+		current_accumulation_rate += increase
 		Globals.mine_accumulation_rates[language_name] = current_accumulation_rate
 		print("Accumulation rate for " + language_name + " increased to: " + str(current_accumulation_rate))
 
