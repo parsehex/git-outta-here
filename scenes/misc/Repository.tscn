@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bfhu52byeed77"]
+[gd_scene load_steps=4 format=3 uid="uid://bfhu52byeed77"]
 
 [ext_resource type="Script" uid="uid://csafsuv32g3aq" path="res://scenes/misc/Repository.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://coekscx27ct6q" path="res://textures/github.svg" id="2"]
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(164.5, 100)
@@ -51,3 +52,21 @@ offset_top = -50.0
 offset_right = 82.0
 offset_bottom = 50.0
 color = Color(0.8, 0.4, 0.2, 1)
+
+[node name="GitHubButton" type="Button" parent="."]
+offset_left = 48.5
+offset_top = 16.0
+offset_right = 80.5
+offset_bottom = 48.0
+mouse_default_cursor_shape = 2
+accessibility_description = "Go to this project on GitHub"
+icon = ExtResource("2")
+flat = true
+
+[node name="Tooltip" type="Label" parent="."]
+visible = false
+offset_left = -84.0
+offset_top = -106.0
+offset_right = 84.0
+offset_bottom = -83.0
+text = "Hold Space to deposit"

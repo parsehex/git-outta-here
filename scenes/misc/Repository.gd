@@ -12,6 +12,8 @@ signal repo_completed(repo_node: Node)
 @onready var range_indicator = $RangeIndicator
 @onready var name_label: Label = $NameLabel
 @onready var language_list: VBoxContainer = $LanguageList
+@onready var github_button: Button = $GitHubButton
+@onready var tooltip: Label = $Tooltip
 
 var player_in_range = false
 var player_node = null
@@ -28,8 +30,12 @@ func _ready():
 		progress_bar.visible = false
 	if range_indicator:
 		range_indicator.visible = false
+	if tooltip:
+		tooltip.visible = false
 	if name_label:
 		name_label.text = repo_name
+	if github_button:
+		github_button.pressed.connect(_on_github_button_pressed)
 
 	# Initialize deposited amounts
 	for lang in repo_data.languages:
@@ -158,6 +164,8 @@ func _deposit_completed():
 
 	if range_indicator:
 		range_indicator.visible = false
+	if tooltip:
+		tooltip.visible = false
 
 func _on_body_entered(body):
 	if body is Player:
@@ -172,6 +180,8 @@ func _on_body_entered(body):
 					break
 			if not completed and _has_required_languages():
 				range_indicator.visible = true
+				if tooltip:
+					tooltip.visible = true
 		print("Player entered repository area: " + repo_name)
 
 func _on_body_exited(body):
@@ -183,6 +193,8 @@ func _on_body_exited(body):
 			progress_bar.visible = false
 		if range_indicator:
 			range_indicator.visible = false
+		if tooltip:
+			tooltip.visible = false
 		print("Player exited repository area: " + repo_name)
 
 func interact():
@@ -199,3 +211,8 @@ func get_save_data() -> Dictionary:
 func load_save_data(data: Dictionary):
 	deposited = data.get("deposited", {})
 	_update_language_list()
+
+func _on_github_button_pressed():
+	if repo_data.has("html_url"):
+		OS.shell_open(repo_data.html_url)
+		print("Opening GitHub URL: " + repo_data.html_url)
