@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bfhu52byeed77"]
+[gd_scene load_steps=5 format=3 uid="uid://bfhu52byeed77"]
 
 [ext_resource type="Script" uid="uid://csafsuv32g3aq" path="res://scenes/misc/Repository.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://coekscx27ct6q" path="res://textures/github.svg" id="2"]
@@ -6,21 +6,6 @@
 
 [sub_resource type="RectangleShape2D" id="1"]
 size = Vector2(230, 154.5)
-
-[sub_resource type="FontFile" id="FontFile_4xj36"]
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-cache/0/24/0/ascent = 0.0
-cache/0/24/0/descent = 0.0
-cache/0/24/0/underline_position = 0.0
-cache/0/24/0/underline_thickness = 0.0
-cache/0/24/0/scale = 1.0
 
 [node name="Repository" type="Area2D"]
 z_index = -1
@@ -61,7 +46,6 @@ offset_bottom = 69.0
 
 [node name="NameLabel" type="Label" parent="LabelContainer"]
 layout_mode = 2
-theme_override_fonts/font = SubResource("FontFile_4xj36")
 theme_override_font_sizes/font_size = 24
 text = "project-name"
 horizontal_alignment = 1
