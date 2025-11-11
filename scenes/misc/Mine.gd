@@ -9,7 +9,6 @@ extends Area2D
 signal mine_interacted(mine_node: Node)
 
 @onready var progress_bar: ProgressBar = $ProgressBar
-@onready var range_indicator = $RangeIndicator
 @onready var label: Label = $Label
 @onready var count_label: Label = $CountLabel
 @onready var accumulation_rate_label: Label = $AccumulationRateLabel
