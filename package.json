@@ -6,9 +6,11 @@
     "doc": "docs"
   },
   "scripts": {
+    "godot": "/Applications/Godot.app/Contents/MacOS/Godot",
+    "build": "npm run godot -- --headless --verbose --path ./ --export-release \"Web\" \"./build/web/game.html\"",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "preview": "vitepress preview docs"
   },
   "repository": {
     "type": "git",

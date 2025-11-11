@@ -39,10 +39,12 @@ offset_bottom = 166.0
 alignment = 1
 
 [node name="LabelContainer" type="VBoxContainer" parent="."]
+clip_contents = true
 offset_left = -77.0
 offset_top = -40.0
 offset_right = 143.0
 offset_bottom = 70.0
+size_flags_horizontal = 3
 
 [node name="NameLabel" type="Label" parent="LabelContainer"]
 custom_minimum_size = Vector2(220, 0)
@@ -50,7 +52,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "project-name"
 horizontal_alignment = 1
-autowrap_mode = 2
+autowrap_mode = 3
 visible_characters_behavior = 1
 
 [node name="DescriptionLabel" type="Label" parent="LabelContainer"]

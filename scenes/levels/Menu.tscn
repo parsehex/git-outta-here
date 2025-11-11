@@ -115,6 +115,7 @@ text = "Controls"
 flat = true
 
 [node name="quit" type="Button" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
