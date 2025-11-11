@@ -2,6 +2,10 @@ name: 'Deploy'
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - .roo/**/*
+      - .vscode/**/*
+      - README.md
 
 # from
 # https://gitlab.com/barichello/game-off/-/blob/master/.github/workflows/godot-ci.yml?ref_type=heads
