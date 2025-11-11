@@ -6,6 +6,9 @@
     "doc": "docs"
   },
   "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "repository": {
     "type": "git",
@@ -17,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/parsehex/git-outta-here/issues"
   },
-  "homepage": "https://github.com/parsehex/git-outta-here#readme"
+  "homepage": "https://github.com/parsehex/git-outta-here#readme",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
 }
