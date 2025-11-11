@@ -31,6 +31,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Build vitepress
+        run: npm run docs:build
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Setup Godot
@@ -40,7 +42,6 @@ jobs:
           apt-get update && apt-get install -y libfontconfig
       - name: Godot Web Build
         run: |
-          mkdir -v -p build/web
           EXPORT_DIR="$(readlink -f build)"
           godot --headless --verbose --path $GITHUB_WORKSPACE --export-release "Web" "$EXPORT_DIR/web/game.html"
       - name: Upload Artifact
